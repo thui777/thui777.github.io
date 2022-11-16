@@ -71,6 +71,57 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-环境变量设置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/" class="article-date">
+  <time class="dt-published" datetime="2022-11-16T04:58:19.469Z" itemprop="datePublished">2022-11-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/ubuntu/">ubuntu</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/">环境变量配置</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="系统版本">系统版本</h2>
+<p>ubuntu22.04</p>
+<h2 id="操作命令">操作命令</h2>
+<h4 id="1-对当前终端有效">1.对当前终端有效</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;export PATH=$PATH:~/.npm-global/bin&#x27; &gt;&gt; ~/.profile</span><br><span class="line"></span><br><span class="line">source ~/.profile</span><br></pre></td></tr></table></figure>
+<h4 id="2-对当前用户有效">2.对当前用户有效</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;export PATH=$PATH:~/.npm-global/bin&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+<h4 id="3-对所有用户有效">3.对所有用户有效</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;export PATH=$PATH:~/.npm-global/bin&#x27; &gt;&gt; /etc/profile</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/" data-id="claj9k0ws0005l0ci9wwi1x4t" data-title="环境变量配置" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-源文件保存" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" class="article-date">
@@ -98,22 +149,25 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <hr>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>除了网页静态文件以外，我们应该把源文件也提交到github上进行备份，以防止本地源文件被误删后需要重新配置，顺带熟悉一下git的使用</p>
-<h2 id="推送源码"><a href="#推送源码" class="headerlink" title="推送源码"></a>推送源码</h2><h4 id="1-进入blog文件夹进行git初始化"><a href="#1-进入blog文件夹进行git初始化" class="headerlink" title="1.进入blog文件夹进行git初始化"></a>1.进入blog文件夹进行git初始化</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-创建hexo分支，用来存放源码"><a href="#2-创建hexo分支，用来存放源码" class="headerlink" title="2.创建hexo分支，用来存放源码"></a>2.创建hexo分支，用来存放源码</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">创建分支</span></span><br><span class="line">git branch hexo</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">切换分支</span></span><br><span class="line">git checkout hexo</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-提交源码到github"><a href="#3-提交源码到github" class="headerlink" title="3.提交源码到github"></a>3.提交源码到github</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">提交到暂存区</span></span><br><span class="line">git add .</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">把暂存区内容提交到当前分支</span></span><br><span class="line">git commit -m &quot;init&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加远程仓库</span></span><br><span class="line">git remote add origin git remote add origin git@github.com:thui777/thui777.github.io.git</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">推送分支</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure>
-
-<h2 id="拉取分支"><a href="#拉取分支" class="headerlink" title="拉取分支"></a>拉取分支</h2><h4 id="1-进入hexo分支"><a href="#1-进入hexo分支" class="headerlink" title="1.进入hexo分支"></a>1.进入hexo分支</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="2-拉去分支合并到当前分支"><a href="#2-拉去分支合并到当前分支" class="headerlink" title="2.拉去分支合并到当前分支"></a>2.拉去分支合并到当前分支</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull orgin hexo</span><br></pre></td></tr></table></figure>
-
+<h2 id="前言">前言</h2>
+<p>除了网页静态文件以外，我们应该把源文件也提交到github上进行备份，以防止本地源文件被误删后需要重新配置，顺带熟悉一下git的使用</p>
+<h2 id="推送源码">推送源码</h2>
+<h4 id="1-进入blog文件夹进行git初始化">1.进入blog文件夹进行git初始化</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+<h4 id="2-创建hexo分支，用来存放源码">2.创建hexo分支，用来存放源码</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">创建分支</span></span><br><span class="line">git branch hexo</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">切换分支</span></span><br><span class="line">git checkout hexo</span><br></pre></td></tr></table></figure>
+<h4 id="3-提交源码到github">3.提交源码到github</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">提交到暂存区</span></span><br><span class="line">git add .</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">把暂存区内容提交到当前分支</span></span><br><span class="line">git commit -m &quot;init&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加远程仓库</span></span><br><span class="line">git remote add origin git remote add origin git@github.com:thui777/thui777.github.io.git</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">推送分支</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure>
+<h2 id="拉取分支">拉取分支</h2>
+<h4 id="1-进入hexo分支">1.进入hexo分支</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="2-拉去分支合并到当前分支">2.拉去分支合并到当前分支</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull orgin hexo</span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" data-id="claj48jvj0004wbci63xv2phz" data-title="源文件保存" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" data-id="claj9k0wr0004l0cid0y9429w" data-title="源文件保存" class="article-share-link">Share</a>
       
       
       
@@ -152,17 +206,22 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <hr>
-<h2 id="layout简介"><a href="#layout简介" class="headerlink" title="layout简介"></a>layout简介</h2><p>layout为布局，每次新建都需要选择一种layout ，hexo默认存在三种post draft page，当输入layout为空时则默认选择post，除了hexo 自带的三种外，我们可以自定义layout</p>
-<h2 id="命令格式"><a href="#命令格式" class="headerlink" title="命令格式"></a>命令格式</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new [layout] title</span><br></pre></td></tr></table></figure>
-
-<h2 id="布局选择"><a href="#布局选择" class="headerlink" title="布局选择"></a>布局选择</h2><h4 id="1-post"><a href="#1-post" class="headerlink" title="1.post"></a>1.post</h4><p>默认在source&#x2F;_posts文件下新建 title，新建的文章为空，会被展示在博客中</p>
-<h4 id="2-draft"><a href="#2-draft" class="headerlink" title="2.draft"></a>2.draft</h4><p>默认在source&#x2F;_drafts文件下新建 title，新建的文章带有Front-Matter，draft是草稿的意思，不会被渲染</p>
-<h4 id="3-page"><a href="#3-page" class="headerlink" title="3.page"></a>3.page</h4><p>命令运行后， 默认在 source 下新建一个页面，我们进入博客时的页面为默认页面，默认页面以时间线展示我们的博客，page 命令帮助我们新建一个页面，一般用来配合分类标签之类的使用</p>
+<h2 id="layout简介">layout简介</h2>
+<p>layout为布局，每次新建都需要选择一种layout ，hexo默认存在三种post draft page，当输入layout为空时则默认选择post，除了hexo 自带的三种外，我们可以自定义layout</p>
+<h2 id="命令格式">命令格式</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new [layout] title</span><br></pre></td></tr></table></figure>
+<h2 id="布局选择">布局选择</h2>
+<h4 id="1-post">1.post</h4>
+<p>默认在source/_posts文件下新建 title，新建的文章为空，会被展示在博客中</p>
+<h4 id="2-draft">2.draft</h4>
+<p>默认在source/_drafts文件下新建 title，新建的文章带有Front-Matter，draft是草稿的意思，不会被渲染</p>
+<h4 id="3-page">3.page</h4>
+<p>命令运行后， 默认在 source 下新建一个页面，我们进入博客时的页面为默认页面，默认页面以时间线展示我们的博客，page 命令帮助我们新建一个页面，一般用来配合分类标签之类的使用</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/" data-id="claj48jvc0001wbciewixh6n8" data-title="新建布局" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/" data-id="claj9k0wg0001l0ci1gocg06y" data-title="新建布局" class="article-share-link">Share</a>
       
       
       
@@ -201,24 +260,21 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <hr>
-<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h2><h4 id="1-初始化blog文件夹"><a href="#1-初始化blog文件夹" class="headerlink" title="1.初始化blog文件夹"></a>1.初始化blog文件夹</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-修改配置文件添加部署仓库"><a href="#2-修改配置文件添加部署仓库" class="headerlink" title="2.修改配置文件添加部署仓库"></a>2.修改配置文件添加部署仓库</h4><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:thui777/thui777.github.io.git</span>	<span class="comment">#SSH</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="3-生成静态网页文件到pubilc文件夹"><a href="#3-生成静态网页文件到pubilc文件夹" class="headerlink" title="3.生成静态网页文件到pubilc文件夹"></a>3.生成静态网页文件到pubilc文件夹</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-部署到设定的仓库"><a href="#4-部署到设定的仓库" class="headerlink" title="4.部署到设定的仓库"></a>4.部署到设定的仓库</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
-
-<h4 id="5-进入github-page查看是否部署成功"><a href="#5-进入github-page查看是否部署成功" class="headerlink" title="5.进入github page查看是否部署成功"></a>5.进入github page查看是否部署成功</h4><h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">thui777@thui777-VirtualBox:~/work/blog$ hexo d</span><br><span class="line"></span><br><span class="line">INFO  Validating config</span><br><span class="line"></span><br><span class="line">ERROR Deployer not found: git</span><br></pre></td></tr></table></figure>
-
-<p>原因：少了hexo针对git的deploy组件，需要安装</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save hexo-deployer-git</span><br></pre></td></tr></table></figure>
-
+<h2 id="操作步骤">操作步骤</h2>
+<h4 id="1-初始化blog文件夹">1.初始化blog文件夹</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加依赖</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<h4 id="2-修改配置文件添加部署仓库">2.修改配置文件添加部署仓库</h4>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:thui777/thui777.github.io.git</span>	<span class="comment">#SSH</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<h4 id="3-生成静态网页文件到pubilc文件夹">3.生成静态网页文件到pubilc文件夹</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
+<h4 id="4-部署到设定的仓库">4.部署到设定的仓库</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
+<h4 id="5-进入github-page查看是否部署成功">5.进入github page查看是否部署成功</h4>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/" data-id="claj48jvk0005wbci0kczg4ru" data-title="网站部署" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/" data-id="claj9k0wu0006l0ci23086zr9" data-title="网站部署" class="article-share-link">Share</a>
       
       
       
@@ -257,14 +313,20 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <hr>
-<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>在写博客时除了代码和文本以外，怎么插入图像是非常要重要的，这里记录一下插入方法，方便以后查阅</p>
-<h2 id="插入方法"><a href="#插入方法" class="headerlink" title="插入方法"></a>插入方法</h2><h4 id="1-先打开Typero的偏好设置，选择图像"><a href="#1-先打开Typero的偏好设置，选择图像" class="headerlink" title="1.先打开Typero的偏好设置，选择图像"></a>1.先打开Typero的偏好设置，选择图像</h4><p><img src="/.com//image-20221116115711158-1668572021359-1.png"></p>
-<h2 id="2-直接插入图片"><a href="#2-直接插入图片" class="headerlink" title="2.直接插入图片"></a>2.直接插入图片</h2><p><img src="/.com//image-20221116120237538.png"></p>
+<h2 id="前言">前言</h2>
+<p>在写博客时除了代码和文本以外，怎么插入图像是非常要重要的，这里记录一下插入方法，方便以后查阅</p>
+<h2 id="步骤">步骤</h2>
+<h4 id="1-先打开Typero的偏好设置，选择图像">1.先打开Typero的偏好设置，选择图像</h4>
+<p><img src="/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/image-20221116143346854.png" alt="typera设置"></p>
+<h4 id="2-下载插件">2.下载插件</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install https://github.com/CodeFalling/hexo-asset-image --save</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">直接用下面这个是显示不了图片的</span></span><br><span class="line">npm install hexo-asset-image --save</span><br></pre></td></tr></table></figure>
+<h4 id="3-修改-config-yml">3.修改_config.yml</h4>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/" data-id="claj48jvf0002wbci7phl5y79" data-title="添加图片" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/" data-id="claj9k0wm0002l0cifoyc4gbc" data-title="添加图片" class="article-share-link">Share</a>
       
       
       
@@ -303,31 +365,30 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <hr>
-<h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><p>ubuntu22.04+顺畅访问github的网络环境</p>
-<h2 id="软件配置"><a href="#软件配置" class="headerlink" title="软件配置"></a>软件配置</h2><h4 id="1-安装nodejs和npm（这里使用版本14-21-1-6-14-17）"><a href="#1-安装nodejs和npm（这里使用版本14-21-1-6-14-17）" class="headerlink" title="1.安装nodejs和npm（这里使用版本14.21.1+6.14.17）"></a>1.安装nodejs和npm（这里使用版本14.21.1+6.14.17）</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install curl -y</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加node14版本到curl</span></span><br><span class="line">curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">下载node+nodejs+npm</span></span><br><span class="line">sudo apt-get install nodejs</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">node -v</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-
-<h4 id="2-配置-npm-权限为全局安装并切换下载源"><a href="#2-配置-npm-权限为全局安装并切换下载源" class="headerlink" title="2.配置 npm 权限为全局安装并切换下载源"></a>2.配置 npm 权限为全局安装并切换下载源</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/.npm-global</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">将 npm 默认下载目录设置为 .npm-global</span></span><br><span class="line">npm config set prefix &#x27;~/.npm-global&#x27;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">将 .npm-global 环境变量添加到 .bashrc</span> </span><br><span class="line">echo &#x27;export PATH=~/.npm-global/bin:$PATH&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">更新环境变量</span></span><br><span class="line">source ~/.bashrc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">切换npm下载源</span></span><br><span class="line">npm config set registry http://registry.npm.taobao.org/</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看npm下载源</span></span><br><span class="line">npm get registry</span><br></pre></td></tr></table></figure>
-
-<h4 id="3-安装hexo"><a href="#3-安装hexo" class="headerlink" title="3.安装hexo"></a>3.安装hexo</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
-
-<h4 id="4-安装git"><a href="#4-安装git" class="headerlink" title="4.安装git"></a>4.安装git</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install git</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">git --version</span><br></pre></td></tr></table></figure>
-
-<h4 id="5-配置-git-绑定-github"><a href="#5-配置-git-绑定-github" class="headerlink" title="5.配置 git 绑定 github"></a>5.配置 git 绑定 github</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">配置 git 的用户名和邮箱（和 github 用户名邮箱一致）</span></span><br><span class="line">git config --global user.name &quot;thui777&quot;</span><br><span class="line">git config --global user.email &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">生成 SSH 密钥（三次回车）</span></span><br><span class="line">ssh-keygen -t rsa -C &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看公钥文件 id_rsa.pub，复制SSH公钥添加到 github 账户中</span></span><br><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-
+<h2 id="配置环境">配置环境</h2>
+<p>ubuntu22.04+顺畅访问github的网络环境</p>
+<h2 id="软件配置">软件配置</h2>
+<h4 id="1-安装nodejs和npm（这里使用版本14-21-1-6-14-17）">1.安装nodejs和npm（这里使用版本14.21.1+6.14.17）</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install curl -y</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加node14版本到curl</span></span><br><span class="line">curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">下载node+nodejs+npm</span></span><br><span class="line">sudo apt-get install nodejs</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">node -v</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
+<h4 id="2-配置-npm-权限为全局安装并切换下载源">2.配置 npm 权限为全局安装并切换下载源</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/.npm-global</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">将 npm 默认下载目录设置为 .npm-global</span></span><br><span class="line">npm config set prefix &#x27;~/.npm-global&#x27;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">将 .npm-global 环境变量添加到 .bashrc</span> </span><br><span class="line">echo &#x27;export PATH=~/.npm-global/bin:$PATH&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">更新环境变量</span></span><br><span class="line">source ~/.bashrc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">切换npm下载源</span></span><br><span class="line">npm config set registry http://registry.npm.taobao.org/</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看npm下载源</span></span><br><span class="line">npm get registry</span><br></pre></td></tr></table></figure>
+<h4 id="3-安装hexo">3.安装hexo</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
+<h4 id="4-安装git">4.安装git</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install git</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">git --version</span><br></pre></td></tr></table></figure>
+<h4 id="5-配置-git-绑定-github">5.配置 git 绑定 github</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">配置 git 的用户名和邮箱（和 github 用户名邮箱一致）</span></span><br><span class="line">git config --global user.name &quot;thui777&quot;</span><br><span class="line">git config --global user.email &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">生成 SSH 密钥（三次回车）</span></span><br><span class="line">ssh-keygen -t rsa -C &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看公钥文件 id_rsa.pub，复制SSH公钥添加到 github 账户中</span></span><br><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
 <hr>
-<h2 id="出现的问题"><a href="#出现的问题" class="headerlink" title="出现的问题"></a>出现的问题</h2><p>ubuntu直接使用apt下载nodejs会安装npm不成功，且版本过低，另外安装npm会导致版本不匹配，在使用npm命令时就会报下面的错误。</p>
+<h2 id="出现的问题">出现的问题</h2>
+<p>ubuntu直接使用apt下载nodejs会安装npm不成功，且版本过低，另外安装npm会导致版本不匹配，在使用npm命令时就会报下面的错误。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! Cannot read property &#x27;insert&#x27; of undefined</span><br><span class="line"></span><br><span class="line">npm ERR! A complete log of this run can be found in:</span><br><span class="line">npm ERR!     /home/thui/.npm/_logs/2022-11-15T13_00_46_517Z-debug-0.log</span><br></pre></td></tr></table></figure>
-
 <p>因为不建议使用sudo安装hexo，在安装好npm后需要将npm配置为全局安装，否则使用npm命令会报下面的错误</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">npm WARN checkPermissions Missing write access to /usr/lib/node_modules</span><br><span class="line">npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@~2.3.2 (node_modules/hexo-cli/node_modules/chokidar/node_modules/fsevents):</span><br><span class="line">npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted &#123;&quot;os&quot;:&quot;darwin&quot;,&quot;arch&quot;:&quot;any&quot;&#125; (current:&#123;&quot;os&quot;:&quot;linux&quot;,&quot;arch&quot;:&quot;x64&quot;&#125;)</span><br><span class="line">npm ERR! code EACCES</span><br><span class="line">npm ERR! syscall access</span><br><span class="line">npm ERR! path /usr/lib/node_modules</span><br><span class="line">npm ERR! errno -13</span><br><span class="line">npm ERR! Error: EACCES: permission denied, access &#x27;/usr/lib/node_modules&#x27;</span><br><span class="line">npm ERR!  [Error: EACCES: permission denied, access &#x27;/usr/lib/node_modules&#x27;] &#123;</span><br><span class="line">npm ERR!   errno: -13,</span><br><span class="line">npm ERR!   code: &#x27;EACCES&#x27;,</span><br><span class="line">npm ERR!   syscall: &#x27;access&#x27;,</span><br><span class="line">npm ERR!   path: &#x27;/usr/lib/node_modules&#x27;</span><br><span class="line">npm ERR! &#125;</span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! The operation was rejected by your operating system.</span><br><span class="line">npm ERR! It is likely you do not have the permissions to access this file as the current user</span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! If you believe this might be a permissions issue, please double-check the</span><br><span class="line">npm ERR! permissions of the file and its containing directories, or try running</span><br><span class="line">npm ERR! the command again as root/Administrator.</span><br><span class="line">npm ERR! A complete log of this run can be found in:</span><br><span class="line">npm ERR!     /home/thui777/.npm/_logs/2022-11-16T03_24_46_479Z-debug.log</span><br></pre></td></tr></table></figure>
-
-
-
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" data-id="claj48jvm0006wbci5xcrgfxm" data-title="软件安装" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" data-id="claj9k0wx0008l0ci7r30d34m" data-title="软件安装" class="article-share-link">Share</a>
       
       
       
@@ -349,7 +410,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a></li></ul>
     </div>
   </div>
 
@@ -377,6 +438,10 @@
       <ul>
         
           <li>
+            <a href="/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/">环境变量配置</a>
+          </li>
+        
+          <li>
             <a href="/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/">源文件保存</a>
           </li>
         
@@ -390,10 +455,6 @@
         
           <li>
             <a href="/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/">添加图片</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/16/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/">软件安装</a>
           </li>
         
       </ul>

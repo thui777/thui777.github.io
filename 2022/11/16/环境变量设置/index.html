@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>网站部署 | thui777</title>
+  <title>环境变量配置 | thui777</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="操作步骤 1.初始化blog文件夹 1234hexo init blogcd blog#添加依赖npm install 2.修改配置文件添加部署仓库 1234deploy:  type: git  repo: git@github.com:thui777&#x2F;thui777.github.io.git	#SSH  branch: main 3.生成静态网页文件到pubilc文件夹 1hexo gen">
+  <meta name="description" content="系统版本 ubuntu22.04 操作命令 1.对当前终端有效 123echo &amp;#x27;export PATH&#x3D;$PATH:~&#x2F;.npm-global&#x2F;bin&amp;#x27; &gt;&gt; ~&#x2F;.profilesource ~&#x2F;.profile 2.对当前用户有效 123echo &amp;#x27;export PATH&#x3D;$PATH:~&#x2F;.npm-global&#x2F;bin&amp;#x27; &gt;&gt;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="网站部署">
-<meta property="og:url" content="http://example.com/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/index.html">
+<meta property="og:title" content="环境变量配置">
+<meta property="og:url" content="http://example.com/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/index.html">
 <meta property="og:site_name" content="thui777">
-<meta property="og:description" content="操作步骤 1.初始化blog文件夹 1234hexo init blogcd blog#添加依赖npm install 2.修改配置文件添加部署仓库 1234deploy:  type: git  repo: git@github.com:thui777&#x2F;thui777.github.io.git	#SSH  branch: main 3.生成静态网页文件到pubilc文件夹 1hexo gen">
+<meta property="og:description" content="系统版本 ubuntu22.04 操作命令 1.对当前终端有效 123echo &amp;#x27;export PATH&#x3D;$PATH:~&#x2F;.npm-global&#x2F;bin&amp;#x27; &gt;&gt; ~&#x2F;.profilesource ~&#x2F;.profile 2.对当前用户有效 123echo &amp;#x27;export PATH&#x3D;$PATH:~&#x2F;.npm-global&#x2F;bin&amp;#x27; &gt;&gt;">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-11-16T04:00:37.829Z">
-<meta property="article:modified_time" content="2022-11-16T06:34:33.010Z">
+<meta property="article:published_time" content="2022-11-16T04:58:19.469Z">
+<meta property="article:modified_time" content="2022-11-16T05:19:49.000Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -73,14 +73,14 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-网站部署" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-环境变量设置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/" class="article-date">
-  <time class="dt-published" datetime="2022-11-16T04:00:37.829Z" itemprop="datePublished">2022-11-16</time>
+    <a href="/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/" class="article-date">
+  <time class="dt-published" datetime="2022-11-16T04:58:19.469Z" itemprop="datePublished">2022-11-16</time>
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/hexo/">hexo</a>
+    <a class="article-category-link" href="/categories/ubuntu/">ubuntu</a>
   </div>
 
   </div>
@@ -91,7 +91,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      网站部署
+      环境变量配置
     </h1>
   
 
@@ -100,21 +100,19 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <hr>
-<h2 id="操作步骤">操作步骤</h2>
-<h4 id="1-初始化blog文件夹">1.初始化blog文件夹</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加依赖</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-<h4 id="2-修改配置文件添加部署仓库">2.修改配置文件添加部署仓库</h4>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:thui777/thui777.github.io.git</span>	<span class="comment">#SSH</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
-<h4 id="3-生成静态网页文件到pubilc文件夹">3.生成静态网页文件到pubilc文件夹</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
-<h4 id="4-部署到设定的仓库">4.部署到设定的仓库</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
-<h4 id="5-进入github-page查看是否部署成功">5.进入github page查看是否部署成功</h4>
-
+<h2 id="系统版本">系统版本</h2>
+<p>ubuntu22.04</p>
+<h2 id="操作命令">操作命令</h2>
+<h4 id="1-对当前终端有效">1.对当前终端有效</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;export PATH=$PATH:~/.npm-global/bin&#x27; &gt;&gt; ~/.profile</span><br><span class="line"></span><br><span class="line">source ~/.profile</span><br></pre></td></tr></table></figure>
+<h4 id="2-对当前用户有效">2.对当前用户有效</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;export PATH=$PATH:~/.npm-global/bin&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line"></span><br><span class="line">source ~/.bashrc</span><br></pre></td></tr></table></figure>
+<h4 id="3-对所有用户有效">3.对所有用户有效</h4>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">echo &#x27;export PATH=$PATH:~/.npm-global/bin&#x27; &gt;&gt; /etc/profile</span><br><span class="line"></span><br><span class="line">source /etc/profile</span><br></pre></td></tr></table></figure>
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/" data-id="claj9k0wu0006l0ci23086zr9" data-title="网站部署" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/" data-id="claj9k0ws0005l0ci9wwi1x4t" data-title="环境变量配置" class="article-share-link">Share</a>
       
       
       
@@ -124,19 +122,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2022/11/16/%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          新建布局
-        
-      </div>
-    </a>
   
-  
-    <a href="/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">添加图片</div>
+      <div class="article-nav-title">源文件保存</div>
     </a>
   
 </nav>
