@@ -71,6 +71,136 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-线程退出" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/" class="article-date">
+  <time class="dt-published" datetime="2022-11-21T15:16:27.402Z" itemprop="datePublished">2022-11-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/">线程进程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/">线程退出</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="线程退出函数">线程退出函数</h2>
+<p>在创建进程时，进程一般写为死循环，那么在创建子线程之后，子线程和主线程会进行抢占，当我们不需要某个线程时我们可以调用线程退出函数来退出线程，子线程和主线程都可以调用这个函数，线程退出函数的原型为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">pthread_exit</span><span class="params">(<span class="type">void</span> *retval)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>retval：线程退出的时候携带的数据，当前子线程的主线程会得到该数据。如果不需要使用，指定为 NULL</li>
+</ul>
+</li>
+</ul>
+<h2 id="创建退出实例">创建退出实例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span>* arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程, 线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;子程序运行%d次\r\n&quot;</span>,i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">   	pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);<span class="comment">//创建子线程，子线程处理函数为callback，传递参数为NULL，属性为NULL</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功, 线程ID: %lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程, 线程ID: %lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//主线程阻塞1秒</span></span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">    <span class="comment">//退出主线程，但是地址空间不会被回收</span></span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;主程序运行%d次\r\n&quot;</span>,i);</span><br><span class="line">        pthread_exit(<span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>主线程在执行第一次的时候就会退出，但是进程地址空间并不会被回收，在等待子线程执行完毕后，操作系统才会把进程的资源进行回收</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/" data-id="claqxogbx0008bpcidotg7w7b" data-title="线程退出" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-线程创建" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/" class="article-date">
+  <time class="dt-published" datetime="2022-11-21T15:16:27.390Z" itemprop="datePublished">2022-11-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/">线程进程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/">线程创建</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="返回线程ID函数">返回线程ID函数</h2>
+<p>每一个线程都有一个唯一的线程ID，ID类型为pthread_t，为无符号长整型，想要得到线程ID则可使用函数，该函数原型为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pthread_t</span> <span class="title function_">pthraed_self</span><span class="params">(<span class="type">void</span>)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>返回参数
+<ul>
+<li>pthread_t：线程ID</li>
+</ul>
+</li>
+</ul>
+<h2 id="线程创建函数">线程创建函数</h2>
+<p>在一个线程中调用线程创建函数，就可以得到一个子线程，和进程不同，需要给每一个创建出的线程指定一个线程处理函数，否则该子线程无法正常工作，创建线程函数原型为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">pthread_create</span><span class="params">(<span class="type">pthread_t</span> *thread,</span></span><br><span class="line"><span class="params">                   <span class="type">const</span> <span class="type">pthread_arr_t</span> * arrt,</span></span><br><span class="line"><span class="params">                   <span class="type">void</span>* (*start_routine)(<span class="type">void</span> *),</span></span><br><span class="line"><span class="params">                   <span class="type">void</span> *arg)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>thread：传出参数，无符号长整型，创建成功将子线程ID写入thread</li>
+<li>arrt：线程属性，一般为空</li>
+<li>start_routine：函数指针，指向子线程处理函数</li>
+<li>arg：传递参数，作为实参传递到start_routine函数内部</li>
+</ul>
+</li>
+<li>返回值
+<ul>
+<li>成功返回0，失败返回错误号</li>
+</ul>
+</li>
+</ul>
+<h2 id="创建线程实例">创建线程实例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span>* arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程, 线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">   	pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);<span class="comment">//创建子线程，子线程处理函数为callback，传递参数为NULL，属性为NULL</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功, 线程ID: %lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程, 线程ID: %lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//主线程阻塞1秒</span></span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行顺序并不是像一般的C程序，先执行子线程，然后子线程执行结束再回到主线程执行，而是在子线程创建成功之后，子线程就会抢占时间片，如果在子线程还没抢占成功之前主线程就已经执行结束，那么进程的虚拟地址空间就会被回收，子线程就再也不会执行；所以说进程是资源分配的最小单位，而线程是系统调度执行的最小单位；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/" data-id="claqxogbt0006bpci9sba2non" data-title="线程创建" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-环境变量设置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/" class="article-date">
@@ -110,7 +240,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/" data-id="claj9k0ws0005l0ci9wwi1x4t" data-title="环境变量配置" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/" data-id="claqxogbs0005bpci8oiecgx3" data-title="环境变量配置" class="article-share-link">Share</a>
       
       
       
@@ -159,15 +289,15 @@
 <h4 id="3-提交源码到github">3.提交源码到github</h4>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">提交到暂存区</span></span><br><span class="line">git add .</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">把暂存区内容提交到当前分支</span></span><br><span class="line">git commit -m &quot;init&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加远程仓库</span></span><br><span class="line">git remote add origin git remote add origin git@github.com:thui777/thui777.github.io.git</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">推送分支</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure>
 <h2 id="拉取分支">拉取分支</h2>
-<h4 id="1-进入hexo分支">1.进入hexo分支</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+<h4 id="1-切换hexo分支">1.切换hexo分支</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo checkout hexo</span><br></pre></td></tr></table></figure>
 <h4 id="2-拉去分支合并到当前分支">2.拉去分支合并到当前分支</h4>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull orgin hexo</span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" data-id="claj9k0wr0004l0cid0y9429w" data-title="源文件保存" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" data-id="claqxogbq0004bpci77z6d73a" data-title="源文件保存" class="article-share-link">Share</a>
       
       
       
@@ -221,7 +351,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/" data-id="claj9k0wg0001l0ci1gocg06y" data-title="新建布局" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/" data-id="claqxogbi0001bpcigmbt1way" data-title="新建布局" class="article-share-link">Share</a>
       
       
       
@@ -270,11 +400,15 @@
 <h4 id="4-部署到设定的仓库">4.部署到设定的仓库</h4>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
 <h4 id="5-进入github-page查看是否部署成功">5.进入github page查看是否部署成功</h4>
+<h2 id="问题">问题</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">thui777@thui777-VirtualBox:~/work/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">ERROR Deployer not found: git</span><br></pre></td></tr></table></figure>
+<p>原因：缺少git组件，安装即可</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/" data-id="claj9k0wu0006l0ci23086zr9" data-title="网站部署" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/" data-id="claqxogbz0009bpciayb1debk" data-title="网站部署" class="article-share-link">Share</a>
       
       
       
@@ -326,7 +460,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/" data-id="claj9k0wm0002l0cifoyc4gbc" data-title="添加图片" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/" data-id="claqxogbl0002bpcibks39rj0" data-title="添加图片" class="article-share-link">Share</a>
       
       
       
@@ -388,7 +522,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" data-id="claj9k0wx0008l0ci7r30d34m" data-title="软件安装" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" data-id="claqxogc1000cbpci42ah4c9h" data-title="软件安装" class="article-share-link">Share</a>
       
       
       
@@ -410,7 +544,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/">线程进程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a></li></ul>
     </div>
   </div>
 
@@ -438,6 +572,14 @@
       <ul>
         
           <li>
+            <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/">线程退出</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/">线程创建</a>
+          </li>
+        
+          <li>
             <a href="/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/">环境变量配置</a>
           </li>
         
@@ -447,14 +589,6 @@
         
           <li>
             <a href="/2022/11/16/%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/">新建布局</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/">网站部署</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/">添加图片</a>
           </li>
         
       </ul>
