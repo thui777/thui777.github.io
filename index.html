@@ -71,6 +71,136 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-线程取消" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/" class="article-date">
+  <time class="dt-published" datetime="2022-11-22T10:05:27.649Z" itemprop="datePublished">2022-11-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/">线程进程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/">5.线程取消</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="线程取消函数">线程取消函数</h2>
+<p>线程取消的含义是在满足某些条件下在一个线程中杀死另一个线程，使用线程取消函数杀死一个线程需要分为两步</p>
+<ol>
+<li>在线程A中调用线程取消函数pthread_cancel，指定杀死线程B，此时线程B还没有死</li>
+<li>在线程B中进行系统调用时（用户区切换到内核区），线程B此时被杀死，如果线程B一直得不到系统调用，那么线程B可以一直运行</li>
+</ol>
+<p>函数原型：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">pthread_cancel</span><span class="params">(<span class="type">pthread_t</span> thread)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>thread：要杀死的线程ID</li>
+</ul>
+</li>
+<li>返回值
+<ul>
+<li>函数调用成功返回0，调用失败返回错误号</li>
+</ul>
+</li>
+</ul>
+<h2 id="线程取消示例">线程取消示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//printf函数会间接的进行系统调用，线程运行到这里就被杀死了</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程，线程ID：%ld，得到系统调用，子线程被杀死\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功, 线程ID：%ld\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程, 线程ID：%ld\n&quot;</span>, pthread_self());</span><br><span class="line">   	<span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;主线程运行中，i = %d\r\n&quot;</span>,i);</span><br><span class="line">    &#125;</span><br><span class="line">    pthread_exit(<span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="编译并执行测试程序">编译并执行测试程序</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">子线程创建成功，线程ID：140686659323456</span><br><span class="line">我是主线程，线程ID：140686659327808</span><br><span class="line">主线程运行中，i = 1</span><br><span class="line">主线程运行中，i = 2</span><br><span class="line">主线程运行中，i = 3</span><br><span class="line">主线程运行中，i = 4</span><br><span class="line">主线程运行中，i = 5</span><br><span class="line">我是子线程，线程ID：140686659323456，得到系统调用，子线程被杀死</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/" data-id="clas1xqvv00016hci2gz35kdj" data-title="5.线程取消" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-线程分离" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%88%86%E7%A6%BB/" class="article-date">
+  <time class="dt-published" datetime="2022-11-22T10:05:27.641Z" itemprop="datePublished">2022-11-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/">线程进程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%88%86%E7%A6%BB/">4.线程分离</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="线程分离函数">线程分离函数</h2>
+<p>在线程回收时，我们提到过，调用线程回收函数会阻塞线程，但是有时候我们的主线程有自己的业务需要处理，并不想让他阻塞起来，同时我们又想关闭回收某个子线程，这个时候我们就可以调用线程分离函数，让操作系统或者其他进程来接管和回收其占用的内核资源，但是线程分离出去之后并不会直接回收线程，有可能还会运行，但是当主线程已经执行完毕后，进程空间被释放，那么分离出去的子线程也会被释放掉；线程分离的函数原型为：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">pthread_detach</span><span class="params">(<span class="type">pthread_t</span> thread)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>thread：线程ID</li>
+</ul>
+</li>
+<li>返回值
+<ul>
+<li>分离成功返回0，失败返回错误号</li>
+</ul>
+</li>
+</ul>
+<h2 id="线程分离示例">线程分离示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程，线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;子线程运行中，i = %d\r\n&quot;</span>,i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功，线程ID：%lu\r\n&quot;</span>,tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程，线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="comment">//子线程分离出主线程</span></span><br><span class="line">    pthread_detach(tid);</span><br><span class="line">	<span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;主线程运行中，i = %d\r\n&quot;</span>,i);</span><br><span class="line">    &#125;</span><br><span class="line">    pthread_exit(<span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="编译并执行测试程序">编译并执行测试程序</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">子线程创建成功，线程ID：140198145324608</span><br><span class="line">我是主线程，线程ID：140198145328960</span><br><span class="line">主线程运行中，i = 1</span><br><span class="line">主线程运行中，i = 2</span><br><span class="line">主线程运行中，i = 3</span><br><span class="line">主线程运行中，i = 4</span><br><span class="line">主线程运行中，i = 5</span><br><span class="line">我是子线程，线程ID：140198145324608</span><br><span class="line">子线程运行中，i = 1</span><br><span class="line">子线程运行中，i = 2</span><br><span class="line">子线程运行中，i = 3</span><br><span class="line">子线程运行中，i = 4</span><br><span class="line">子线程运行中，i = 5</span><br></pre></td></tr></table></figure>
+<p>可以发现线程分离后主线程并没有被阻塞起来，而是继续运行，主线程运行完成并退出，子线程抢占成功且运行，运行完成后操作系统直接回收其占用的资源</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%88%86%E7%A6%BB/" data-id="clas1xqvo00006hci7kv6go8x" data-title="4.线程分离" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-线程回收" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/" class="article-date">
@@ -89,7 +219,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/">线程回收</a>
+      <a class="p-name article-title" href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/">3.线程回收</a>
     </h1>
   
 
@@ -99,7 +229,7 @@
       
         <hr>
 <h2 id="线程回收函数">线程回收函数</h2>
-<p>线程和进程一样，子线程退出的时候其内核资源主要由主线程回收（也可由其他线程回收），线程库中提供的线程回收函数叫做pthread_join()，这是一个阻塞函数，如果还有子线程在运行，调用该函数就会阻塞线程，并且等待子线程退出，退出后函数解除阻塞状态并进行资源回收，函数被调用一次只能回收一个子线程，有多个子线程需要多次调用；另外通过线程回收函数还可以获取到子线程退出时传递出来的数据，它的函数原型为：</p>
+<p>线程和进程一样，子线程退出的时候其内核资源主要由主线程回收（也可由其他线程回收），线程库中提供的线程回收函数叫做pthread_join()，这是一个阻塞函数，如果还有子线程在运行，主线程调用该函数就会阻塞，并且等待子线程运行退出，退出后主线程解除阻塞状态并进行资源回收，函数被调用一次只能回收一个子线程，有多个子线程需要多次调用；另外通过线程回收函数还可以获取到子线程退出时传递出来的数据，它的函数原型为：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">pthread_join</span><span class="params">(<span class="type">pthread_t</span> thread, <span class="type">void</span> **retval)</span>;</span><br></pre></td></tr></table></figure>
 <ul>
 <li>参数
@@ -114,20 +244,20 @@
 </ul>
 </li>
 </ul>
-<h2 id="线程回收实例">线程回收实例</h2>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">data</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">char</span> name[<span class="number">10</span>];</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">&#125;data;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span>* <span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程, 线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;子程序运行%d次\r\n&quot;</span>,i);</span><br><span class="line">        data my;</span><br><span class="line">        <span class="built_in">strcpy</span>(my.name, <span class="string">&quot;thui&quot;</span>);</span><br><span class="line">        my.age = <span class="number">22</span>;</span><br><span class="line">        pthread_exit(&amp;my);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功, 线程ID: %lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程, 线程ID: %lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//使用这个指针接收子线程回收后传出的数据</span></span><br><span class="line">    <span class="type">void</span> *p = <span class="literal">NULL</span>;</span><br><span class="line">    pthread_join(tid, &amp;p);</span><br><span class="line">    data *child_data = (data *)p;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;child name:%s age:%d\r\n&quot;</span>,child_data-&gt;name,child_data-&gt;age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程资源被成功回收\r\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="线程回收示例">线程回收示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">data</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">char</span> name[<span class="number">10</span>];</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">&#125;data;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程，线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;子线程运行中，i = %d\r\n&quot;</span>,i);</span><br><span class="line">        data my;</span><br><span class="line">        <span class="built_in">strcpy</span>(my.name, <span class="string">&quot;thui&quot;</span>);</span><br><span class="line">        my.age = <span class="number">22</span>;</span><br><span class="line">        pthread_exit(&amp;my);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功，线程ID：%lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程，线程ID：%lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//使用这个指针接收子线程回收后传出的数据</span></span><br><span class="line">    <span class="type">void</span> *p = <span class="literal">NULL</span>;</span><br><span class="line">    pthread_join(tid, &amp;p);</span><br><span class="line">    data *child_data = (data *)p;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;child name：%s age：%d\r\n&quot;</span>,child_data-&gt;name,child_data-&gt;age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程资源被成功回收\r\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="编译并执行测试程序">编译并执行测试程序</h2>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">thui777@thui777-VirtualBox:~/work/linux$ ./main</span><br><span class="line">子线程创建成功, 线程ID: 140361177597504</span><br><span class="line">我是主线程, 线程ID: 140361177601856</span><br><span class="line">我是子线程, 线程ID：140361177597504</span><br><span class="line">子程序运行1次</span><br><span class="line">child name: age:32680</span><br><span class="line">子线程资源被成功回收</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">子线程创建成功，线程ID：140166532716096</span><br><span class="line">我是主线程，线程ID：140166532720448</span><br><span class="line">我是子线程，线程ID：140166532716096</span><br><span class="line">子线程运行中，i = 1</span><br><span class="line">child name：age：32635</span><br><span class="line">子线程资源被成功回收</span><br></pre></td></tr></table></figure>
 <p>打印出来后发现信息并不是我们想要传递的信息，这是因为子线程在被回收后，子线程的栈空间就被回收，此时指向该空间得到的数据是一个随机值，显然，我们需要把想要传递出的数据放到堆或者全局段，或者让子线程使用主线程的栈空间</p>
-<h2 id="使用主线程栈空间">使用主线程栈空间</h2>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">data</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">char</span> name[<span class="number">10</span>];</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">&#125;data;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span>* <span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程, 线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;子程序运行%d次\r\n&quot;</span>,i);</span><br><span class="line">        data *my = (data *)arg;</span><br><span class="line">        <span class="built_in">strcpy</span>(my-&gt;name, <span class="string">&quot;thui&quot;</span>);</span><br><span class="line">        my-&gt;age = <span class="number">22</span>;</span><br><span class="line">        pthread_exit(&amp;my);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    data child_data;</span><br><span class="line">    pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, &amp;child_data);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功, 线程ID: %lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程, 线程ID: %lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//使用这个指针接收子线程回收后传出的数据</span></span><br><span class="line">    <span class="type">void</span> *p = <span class="literal">NULL</span>;</span><br><span class="line">    pthread_join(tid, &amp;p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;child name:%s age:%d\r\n&quot;</span>,child_data.name,child_data.age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程资源被成功回收\r\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="使用主线程栈空间示例">使用主线程栈空间示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">data</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">char</span> name[<span class="number">10</span>];</span><br><span class="line">    <span class="type">int</span> age;</span><br><span class="line">&#125;data;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span>* <span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程，线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;子线程运行中，i = %d\r\n&quot;</span>,i);</span><br><span class="line">        data *my = (data *)arg;</span><br><span class="line">        <span class="built_in">strcpy</span>(my-&gt;name, <span class="string">&quot;thui&quot;</span>);</span><br><span class="line">        my-&gt;age = <span class="number">22</span>;</span><br><span class="line">        pthread_exit(&amp;my);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    data child_data;</span><br><span class="line">    pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, &amp;child_data);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功，线程ID：%lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程，线程ID：%lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//使用这个指针接收子线程回收后传出的数据</span></span><br><span class="line">    <span class="type">void</span> *p = <span class="literal">NULL</span>;</span><br><span class="line">    pthread_join(tid, &amp;p);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;child name：%s age：%d\r\n&quot;</span>,child_data.name,child_data.age);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程资源被成功回收\r\n&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="编译并执行测试程序-2">编译并执行测试程序</h2>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">thui777@thui777-VirtualBox:~/work/linux$ ./main </span><br><span class="line">子线程创建成功, 线程ID: 139634069435968</span><br><span class="line">我是主线程, 线程ID: 139634069440320</span><br><span class="line">我是子线程, 线程ID：139634069435968</span><br><span class="line">子程序运行1次</span><br><span class="line">child name:thui age:22</span><br><span class="line">子线程资源被成功回收</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">子线程创建成功，线程ID：139701678691904</span><br><span class="line">我是主线程，线程ID：139701678696256</span><br><span class="line">我是子线程，线程ID：139701678691904</span><br><span class="line">子线程运行中，i = 1</span><br><span class="line">child name：thui age：22</span><br><span class="line">子线程资源被成功回收</span><br></pre></td></tr></table></figure>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/" data-id="clarmgdxf0000zsci0n4zcxgj" data-title="线程回收" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/" data-id="clarmgdxf0000zsci0n4zcxgj" data-title="3.线程回收" class="article-share-link">Share</a>
       
       
       
@@ -157,7 +287,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/">线程退出</a>
+      <a class="p-name article-title" href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/">2.线程退出</a>
     </h1>
   
 
@@ -176,16 +306,16 @@
 </ul>
 </li>
 </ul>
-<h2 id="创建退出实例">创建退出实例</h2>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程, 线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;子程序运行%d次\r\n&quot;</span>,i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//进程从这里退出</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">   	pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);<span class="comment">//创建子线程，子线程处理函数为callback，传递参数为NULL，属性为NULL</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功, 线程ID: %lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程, 线程ID: %lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//退出主线程，但是地址空间不会被回收</span></span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;主程序运行%d次\r\n&quot;</span>,i);</span><br><span class="line">        pthread_exit(<span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//主线程退出后下面的语句并不会执行</span></span><br><span class="line">    <span class="comment">//主线程阻塞100秒，但是主线程退出了，观察不到进程阻塞状态</span></span><br><span class="line">    sleep(<span class="number">100</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="线程退出示例">线程退出示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程，线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;子线程运行中，i = %d\r\n&quot;</span>,i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//进程从这里退出</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    <span class="comment">//创建子线程，子线程处理函数为callback，传递参数为NULL，属性为NULL</span></span><br><span class="line">    pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功，线程ID：%lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程，线程ID：%lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//退出主线程，但是地址空间不会被回收</span></span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;主线程运行中，i = %d\r\n&quot;</span>,i);</span><br><span class="line">        pthread_exit(<span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//主线程退出后下面的语句并不会执行</span></span><br><span class="line">    <span class="comment">//主线程阻塞100秒，但是主线程退出了，观察不到进程阻塞状态</span></span><br><span class="line">    sleep(<span class="number">100</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="编译并执行测试程序">编译并执行测试程序</h2>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">thui777@thui777-VirtualBox:~/work/linux$ ./main </span><br><span class="line">子线程创建成功, 线程ID: 140581929944640</span><br><span class="line">我是主线程, 线程ID: 140581929948992</span><br><span class="line">主程序运行1次</span><br><span class="line">我是子线程, 线程ID：140581929944640</span><br><span class="line">子程序运行1次</span><br><span class="line">子程序运行2次</span><br><span class="line">子程序运行3次</span><br><span class="line">子程序运行4次</span><br><span class="line">子程序运行5次</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">子线程创建成功，线程ID：139889038530112</span><br><span class="line">我是主线程，线程ID：139889038534464</span><br><span class="line">主线程运行中，i = 1</span><br><span class="line">我是子线程，线程ID：139889038530112</span><br><span class="line">子线程运行中，i = 1</span><br><span class="line">子线程运行中，i = 2</span><br><span class="line">子线程运行中，i = 3</span><br><span class="line">子线程运行中，i = 4</span><br><span class="line">子线程运行中，i = 5</span><br></pre></td></tr></table></figure>
 <p>主线程在执行第一次的时候就会退出，但是进程地址空间并不会被回收，在等待子线程执行完毕后，操作系统才会把进程的资源进行回收</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/" data-id="claqxogbx0008bpcidotg7w7b" data-title="线程退出" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/" data-id="claqxogbx0008bpcidotg7w7b" data-title="2.线程退出" class="article-share-link">Share</a>
       
       
       
@@ -215,7 +345,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/">线程创建</a>
+      <a class="p-name article-title" href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/">1.线程创建</a>
     </h1>
   
 
@@ -252,16 +382,16 @@
 </ul>
 </li>
 </ul>
-<h2 id="创建线程实例">创建线程实例</h2>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程, 线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">   	pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);<span class="comment">//创建子线程，子线程处理函数为callback，传递参数为NULL，属性为NULL</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功, 线程ID: %lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程, 线程ID: %lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//主线程阻塞1秒</span></span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="创建线程示例">创建线程示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程，线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    <span class="comment">//创建子线程，子线程处理函数为callback，传递参数为NULL，属性为NULL</span></span><br><span class="line">    pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功，线程ID：%lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程，线程ID：%lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//主线程阻塞1秒</span></span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="编译并执行测试程序">编译并执行测试程序</h2>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">thui777@thui777-VirtualBox:~/work/linux$ ./main </span><br><span class="line">子线程创建成功, 线程ID: 140206938711616</span><br><span class="line">我是主线程, 线程ID: 140206938715968</span><br><span class="line">我是子线程, 线程ID：140206938711616</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">thui777@thui777-VirtualBox:~/work/linux$ ./main </span><br><span class="line">子线程创建成功，线程ID：140206938711616</span><br><span class="line">我是主线程，线程ID：140206938715968</span><br><span class="line">我是子线程，线程ID：140206938711616</span><br></pre></td></tr></table></figure>
 <p>可以发现是先执行的主线程，再执行的子线程，因为线程执行顺序并不是像一般的C程序，先执行子线程，然后子线程执行结束再回到主线程执行，而是在子线程创建成功之后，子线程就会抢占时间片，如果在子线程还没抢占成功之前主线程就已经执行结束，那么进程的虚拟地址空间就会被回收，子线程就再也不会执行；所以说进程是资源分配的最小单位，而线程是系统调度执行的最小单位；</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/" data-id="claqxogbt0006bpci9sba2non" data-title="线程创建" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/" data-id="claqxogbt0006bpci9sba2non" data-title="1.线程创建" class="article-share-link">Share</a>
       
       
       
@@ -291,7 +421,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/">环境变量配置</a>
+      <a class="p-name article-title" href="/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/">1.环境变量配置</a>
     </h1>
   
 
@@ -312,7 +442,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/" data-id="claqxogbs0005bpci8oiecgx3" data-title="环境变量配置" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/" data-id="claqxogbs0005bpci8oiecgx3" data-title="1.环境变量配置" class="article-share-link">Share</a>
       
       
       
@@ -342,7 +472,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/">源文件保存</a>
+      <a class="p-name article-title" href="/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/">3.源文件保存</a>
     </h1>
   
 
@@ -369,7 +499,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" data-id="claqxogbq0004bpci77z6d73a" data-title="源文件保存" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" data-id="claqxogbq0004bpci77z6d73a" data-title="3.源文件保存" class="article-share-link">Share</a>
       
       
       
@@ -399,7 +529,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/16/%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/">新建布局</a>
+      <a class="p-name article-title" href="/2022/11/16/%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/">4.新建布局</a>
     </h1>
   
 
@@ -423,7 +553,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/" data-id="claqxogbi0001bpcigmbt1way" data-title="新建布局" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/" data-id="claqxogbi0001bpcigmbt1way" data-title="4.新建布局" class="article-share-link">Share</a>
       
       
       
@@ -453,7 +583,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/">网站部署</a>
+      <a class="p-name article-title" href="/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/">2.网站部署</a>
     </h1>
   
 
@@ -480,7 +610,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/" data-id="claqxogbz0009bpciayb1debk" data-title="网站部署" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/" data-id="claqxogbz0009bpciayb1debk" data-title="2.网站部署" class="article-share-link">Share</a>
       
       
       
@@ -510,7 +640,7 @@
         
   
     <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/">添加图片</a>
+      <a class="p-name article-title" href="/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/">5.添加图片</a>
     </h1>
   
 
@@ -532,69 +662,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/" data-id="claqxogbl0002bpcibks39rj0" data-title="添加图片" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-软件安装" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022/11/16/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" class="article-date">
-  <time class="dt-published" datetime="2022-11-16T04:00:37.817Z" itemprop="datePublished">2022-11-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hexo/">hexo</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/16/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/">软件安装</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <hr>
-<h2 id="配置环境">配置环境</h2>
-<p>ubuntu22.04+顺畅访问github的网络环境</p>
-<h2 id="软件配置">软件配置</h2>
-<h4 id="1-安装nodejs和npm（这里使用版本14-21-1-6-14-17）">1.安装nodejs和npm（这里使用版本14.21.1+6.14.17）</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install curl -y</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加node14版本到curl</span></span><br><span class="line">curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">下载node+nodejs+npm</span></span><br><span class="line">sudo apt-get install nodejs</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">node -v</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-<h4 id="2-配置-npm-权限为全局安装并切换下载源">2.配置 npm 权限为全局安装并切换下载源</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/.npm-global</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">将 npm 默认下载目录设置为 .npm-global</span></span><br><span class="line">npm config set prefix &#x27;~/.npm-global&#x27;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">将 .npm-global 环境变量添加到 .bashrc</span> </span><br><span class="line">echo &#x27;export PATH=~/.npm-global/bin:$PATH&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">更新环境变量</span></span><br><span class="line">source ~/.bashrc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">切换npm下载源</span></span><br><span class="line">npm config set registry http://registry.npm.taobao.org/</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看npm下载源</span></span><br><span class="line">npm get registry</span><br></pre></td></tr></table></figure>
-<h4 id="3-安装hexo">3.安装hexo</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
-<h4 id="4-安装git">4.安装git</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install git</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">git --version</span><br></pre></td></tr></table></figure>
-<h4 id="5-配置-git-绑定-github">5.配置 git 绑定 github</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">配置 git 的用户名和邮箱（和 github 用户名邮箱一致）</span></span><br><span class="line">git config --global user.name &quot;thui777&quot;</span><br><span class="line">git config --global user.email &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">生成 SSH 密钥（三次回车）</span></span><br><span class="line">ssh-keygen -t rsa -C &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看公钥文件 id_rsa.pub，复制SSH公钥添加到 github 账户中</span></span><br><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="出现的问题">出现的问题</h2>
-<p>ubuntu直接使用apt下载nodejs会安装npm不成功，且版本过低，另外安装npm会导致版本不匹配，在使用npm命令时就会报下面的错误。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! Cannot read property &#x27;insert&#x27; of undefined</span><br><span class="line"></span><br><span class="line">npm ERR! A complete log of this run can be found in:</span><br><span class="line">npm ERR!     /home/thui/.npm/_logs/2022-11-15T13_00_46_517Z-debug-0.log</span><br></pre></td></tr></table></figure>
-<p>因为不建议使用sudo安装hexo，在安装好npm后需要将npm配置为全局安装，否则使用npm命令会报下面的错误</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">npm WARN checkPermissions Missing write access to /usr/lib/node_modules</span><br><span class="line">npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@~2.3.2 (node_modules/hexo-cli/node_modules/chokidar/node_modules/fsevents):</span><br><span class="line">npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted &#123;&quot;os&quot;:&quot;darwin&quot;,&quot;arch&quot;:&quot;any&quot;&#125; (current:&#123;&quot;os&quot;:&quot;linux&quot;,&quot;arch&quot;:&quot;x64&quot;&#125;)</span><br><span class="line">npm ERR! code EACCES</span><br><span class="line">npm ERR! syscall access</span><br><span class="line">npm ERR! path /usr/lib/node_modules</span><br><span class="line">npm ERR! errno -13</span><br><span class="line">npm ERR! Error: EACCES: permission denied, access &#x27;/usr/lib/node_modules&#x27;</span><br><span class="line">npm ERR!  [Error: EACCES: permission denied, access &#x27;/usr/lib/node_modules&#x27;] &#123;</span><br><span class="line">npm ERR!   errno: -13,</span><br><span class="line">npm ERR!   code: &#x27;EACCES&#x27;,</span><br><span class="line">npm ERR!   syscall: &#x27;access&#x27;,</span><br><span class="line">npm ERR!   path: &#x27;/usr/lib/node_modules&#x27;</span><br><span class="line">npm ERR! &#125;</span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! The operation was rejected by your operating system.</span><br><span class="line">npm ERR! It is likely you do not have the permissions to access this file as the current user</span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! If you believe this might be a permissions issue, please double-check the</span><br><span class="line">npm ERR! permissions of the file and its containing directories, or try running</span><br><span class="line">npm ERR! the command again as root/Administrator.</span><br><span class="line">npm ERR! A complete log of this run can be found in:</span><br><span class="line">npm ERR!     /home/thui777/.npm/_logs/2022-11-16T03_24_46_479Z-debug.log</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" data-id="claqxogc1000cbpci42ah4c9h" data-title="软件安装" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/" data-id="claqxogbl0002bpcibks39rj0" data-title="5.添加图片" class="article-share-link">Share</a>
       
       
       
@@ -607,6 +675,11 @@
 
   
 
+
+  <nav id="page-nav">
+    
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
 
 </section>
         
@@ -644,23 +717,23 @@
       <ul>
         
           <li>
-            <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/">线程回收</a>
+            <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/">5.线程取消</a>
           </li>
         
           <li>
-            <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/">线程退出</a>
+            <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%88%86%E7%A6%BB/">4.线程分离</a>
           </li>
         
           <li>
-            <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/">线程创建</a>
+            <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/">3.线程回收</a>
           </li>
         
           <li>
-            <a href="/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/">环境变量配置</a>
+            <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/">2.线程退出</a>
           </li>
         
           <li>
-            <a href="/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/">源文件保存</a>
+            <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/">1.线程创建</a>
           </li>
         
       </ul>
