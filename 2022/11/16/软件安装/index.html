@@ -14,7 +14,7 @@
 <meta property="og:description" content="配置环境 ubuntu22.04+顺畅访问github的网络环境 软件配置 1.安装nodejs和npm（这里使用版本14.21.1+6.14.17） 123456789sudo apt install curl -y#添加node14版本到curlcurl -sL https:&#x2F;&#x2F;deb.nodesource.com&#x2F;setup_14.x | sudo -E bash -#下载node+nod">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-11-16T04:00:37.817Z">
-<meta property="article:modified_time" content="2022-11-22T10:09:55.000Z">
+<meta property="article:modified_time" content="2022-11-23T04:57:26.000Z">
 <meta property="article:author" content="thui777">
 <meta name="twitter:card" content="summary">
   
@@ -115,9 +115,9 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">配置 git 的用户名和邮箱（和 github 用户名邮箱一致）</span></span><br><span class="line">git config --global user.name &quot;thui777&quot;</span><br><span class="line">git config --global user.email &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">生成 SSH 密钥（三次回车）</span></span><br><span class="line">ssh-keygen -t rsa -C &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看公钥文件 id_rsa.pub，复制SSH公钥添加到 github 账户中</span></span><br><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
 <hr>
 <h2 id="出现的问题">出现的问题</h2>
-<p>ubuntu直接使用apt下载nodejs会安装npm不成功，且版本过低，另外安装npm会导致版本不匹配，在使用npm命令时就会报下面的错误。</p>
+<p>ubuntu直接使用apt下载nodejs会安装npm不成功，且版本过低，另外安装npm会导致版本不匹配，在使用npm命令时就会报下面的错误：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! Cannot read property &#x27;insert&#x27; of undefined</span><br><span class="line"></span><br><span class="line">npm ERR! A complete log of this run can be found in:</span><br><span class="line">npm ERR!     /home/thui/.npm/_logs/2022-11-15T13_00_46_517Z-debug-0.log</span><br></pre></td></tr></table></figure>
-<p>因为不建议使用sudo安装hexo，在安装好npm后需要将npm配置为全局安装，否则使用npm命令会报下面的错误</p>
+<p>因为不建议使用sudo安装hexo，在安装好npm后需要将npm配置为全局安装，否则使用npm命令会报下面的错误：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">npm WARN checkPermissions Missing write access to /usr/lib/node_modules</span><br><span class="line">npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@~2.3.2 (node_modules/hexo-cli/node_modules/chokidar/node_modules/fsevents):</span><br><span class="line">npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted &#123;&quot;os&quot;:&quot;darwin&quot;,&quot;arch&quot;:&quot;any&quot;&#125; (current:&#123;&quot;os&quot;:&quot;linux&quot;,&quot;arch&quot;:&quot;x64&quot;&#125;)</span><br><span class="line">npm ERR! code EACCES</span><br><span class="line">npm ERR! syscall access</span><br><span class="line">npm ERR! path /usr/lib/node_modules</span><br><span class="line">npm ERR! errno -13</span><br><span class="line">npm ERR! Error: EACCES: permission denied, access &#x27;/usr/lib/node_modules&#x27;</span><br><span class="line">npm ERR!  [Error: EACCES: permission denied, access &#x27;/usr/lib/node_modules&#x27;] &#123;</span><br><span class="line">npm ERR!   errno: -13,</span><br><span class="line">npm ERR!   code: &#x27;EACCES&#x27;,</span><br><span class="line">npm ERR!   syscall: &#x27;access&#x27;,</span><br><span class="line">npm ERR!   path: &#x27;/usr/lib/node_modules&#x27;</span><br><span class="line">npm ERR! &#125;</span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! The operation was rejected by your operating system.</span><br><span class="line">npm ERR! It is likely you do not have the permissions to access this file as the current user</span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! If you believe this might be a permissions issue, please double-check the</span><br><span class="line">npm ERR! permissions of the file and its containing directories, or try running</span><br><span class="line">npm ERR! the command again as root/Administrator.</span><br><span class="line">npm ERR! A complete log of this run can be found in:</span><br><span class="line">npm ERR!     /home/thui777/.npm/_logs/2022-11-16T03_24_46_479Z-debug.log</span><br></pre></td></tr></table></figure>
 
       
@@ -185,6 +185,10 @@
       <ul>
         
           <li>
+            <a href="/2022/11/23/%E4%BA%92%E6%96%A5%E9%94%81/">互斥锁</a>
+          </li>
+        
+          <li>
             <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/">线程同步</a>
           </li>
         
@@ -198,10 +202,6 @@
         
           <li>
             <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/">线程回收</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/">线程退出</a>
           </li>
         
       </ul>

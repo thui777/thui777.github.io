@@ -71,6 +71,63 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-网站部署" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/" class="article-date">
+  <time class="dt-published" datetime="2022-11-16T04:00:37.829Z" itemprop="datePublished">2022-11-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hexo/">hexo</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/">2.网站部署</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="操作步骤">操作步骤</h2>
+<h4 id="1-初始化blog文件夹">1.初始化blog文件夹</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加依赖</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
+<h4 id="2-修改配置文件添加部署仓库">2.修改配置文件添加部署仓库</h4>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:thui777/thui777.github.io.git</span>	<span class="comment">#SSH</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
+<h4 id="3-生成静态网页文件到pubilc文件夹">3.生成静态网页文件到pubilc文件夹</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
+<h4 id="4-部署到设定的仓库">4.部署到设定的仓库</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
+<h4 id="5-进入github-page查看是否部署成功">5.进入github page查看是否部署成功</h4>
+<h2 id="问题">问题</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">thui777@thui777-VirtualBox:~/work/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">ERROR Deployer not found: git</span><br></pre></td></tr></table></figure>
+<p>原因：缺少git组件，安装即可</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/16/%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/" data-id="claqxogbz0009bpciayb1debk" data-title="2.网站部署" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-添加图片" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/" class="article-date">
@@ -165,9 +222,9 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">配置 git 的用户名和邮箱（和 github 用户名邮箱一致）</span></span><br><span class="line">git config --global user.name &quot;thui777&quot;</span><br><span class="line">git config --global user.email &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">生成 SSH 密钥（三次回车）</span></span><br><span class="line">ssh-keygen -t rsa -C &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看公钥文件 id_rsa.pub，复制SSH公钥添加到 github 账户中</span></span><br><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
 <hr>
 <h2 id="出现的问题">出现的问题</h2>
-<p>ubuntu直接使用apt下载nodejs会安装npm不成功，且版本过低，另外安装npm会导致版本不匹配，在使用npm命令时就会报下面的错误。</p>
+<p>ubuntu直接使用apt下载nodejs会安装npm不成功，且版本过低，另外安装npm会导致版本不匹配，在使用npm命令时就会报下面的错误：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! Cannot read property &#x27;insert&#x27; of undefined</span><br><span class="line"></span><br><span class="line">npm ERR! A complete log of this run can be found in:</span><br><span class="line">npm ERR!     /home/thui/.npm/_logs/2022-11-15T13_00_46_517Z-debug-0.log</span><br></pre></td></tr></table></figure>
-<p>因为不建议使用sudo安装hexo，在安装好npm后需要将npm配置为全局安装，否则使用npm命令会报下面的错误</p>
+<p>因为不建议使用sudo安装hexo，在安装好npm后需要将npm配置为全局安装，否则使用npm命令会报下面的错误：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">npm WARN checkPermissions Missing write access to /usr/lib/node_modules</span><br><span class="line">npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@~2.3.2 (node_modules/hexo-cli/node_modules/chokidar/node_modules/fsevents):</span><br><span class="line">npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted &#123;&quot;os&quot;:&quot;darwin&quot;,&quot;arch&quot;:&quot;any&quot;&#125; (current:&#123;&quot;os&quot;:&quot;linux&quot;,&quot;arch&quot;:&quot;x64&quot;&#125;)</span><br><span class="line">npm ERR! code EACCES</span><br><span class="line">npm ERR! syscall access</span><br><span class="line">npm ERR! path /usr/lib/node_modules</span><br><span class="line">npm ERR! errno -13</span><br><span class="line">npm ERR! Error: EACCES: permission denied, access &#x27;/usr/lib/node_modules&#x27;</span><br><span class="line">npm ERR!  [Error: EACCES: permission denied, access &#x27;/usr/lib/node_modules&#x27;] &#123;</span><br><span class="line">npm ERR!   errno: -13,</span><br><span class="line">npm ERR!   code: &#x27;EACCES&#x27;,</span><br><span class="line">npm ERR!   syscall: &#x27;access&#x27;,</span><br><span class="line">npm ERR!   path: &#x27;/usr/lib/node_modules&#x27;</span><br><span class="line">npm ERR! &#125;</span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! The operation was rejected by your operating system.</span><br><span class="line">npm ERR! It is likely you do not have the permissions to access this file as the current user</span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! If you believe this might be a permissions issue, please double-check the</span><br><span class="line">npm ERR! permissions of the file and its containing directories, or try running</span><br><span class="line">npm ERR! the command again as root/Administrator.</span><br><span class="line">npm ERR! A complete log of this run can be found in:</span><br><span class="line">npm ERR!     /home/thui777/.npm/_logs/2022-11-16T03_24_46_479Z-debug.log</span><br></pre></td></tr></table></figure>
 
       
@@ -228,6 +285,10 @@
       <ul>
         
           <li>
+            <a href="/2022/11/23/%E4%BA%92%E6%96%A5%E9%94%81/">互斥锁</a>
+          </li>
+        
+          <li>
             <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/">线程同步</a>
           </li>
         
@@ -241,10 +302,6 @@
         
           <li>
             <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/">线程回收</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/">线程退出</a>
           </li>
         
       </ul>
