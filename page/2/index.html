@@ -71,6 +71,63 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-源文件保存" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" class="article-date">
+  <time class="dt-published" datetime="2022-11-16T04:00:37.842Z" itemprop="datePublished">2022-11-16</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/hexo/">hexo</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/">3.源文件保存</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="前言">前言</h2>
+<p>除了网页静态文件以外，我们应该把源文件也提交到github上进行备份，以防止本地源文件被误删后需要重新配置，顺带熟悉一下git的使用；</p>
+<h2 id="推送源码">推送源码</h2>
+<h4 id="1-进入blog文件夹进行git初始化">1.进入blog文件夹进行git初始化</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
+<h4 id="2-创建hexo分支，用来存放源码">2.创建hexo分支，用来存放源码</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">创建分支</span></span><br><span class="line">git branch hexo</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">切换分支</span></span><br><span class="line">git checkout hexo</span><br></pre></td></tr></table></figure>
+<h4 id="3-提交源码到github">3.提交源码到github</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">提交到暂存区</span></span><br><span class="line">git add .</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">把暂存区内容提交到当前分支</span></span><br><span class="line">git commit -m &quot;init&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加远程仓库</span></span><br><span class="line">git remote add origin git remote add origin git@github.com:thui777/thui777.github.io.git</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">推送分支</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure>
+<h2 id="拉取分支">拉取分支</h2>
+<h4 id="1-切换hexo分支">1.切换hexo分支</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo checkout hexo</span><br></pre></td></tr></table></figure>
+<h4 id="2-拉去分支合并到当前分支">2.拉去分支合并到当前分支</h4>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull orgin hexo</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" data-id="claqxogbq0004bpci77z6d73a" data-title="3.源文件保存" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-新建布局" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/11/16/%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/" class="article-date">
@@ -325,7 +382,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li></ul>
     </div>
   </div>
 
@@ -336,6 +393,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022/12/08/%E8%AF%BB%E5%86%99%E9%94%81/">读写锁</a>
+          </li>
         
           <li>
             <a href="/2022/11/23/%E6%AD%BB%E9%94%81/">死锁</a>
@@ -351,10 +412,6 @@
         
           <li>
             <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/">线程取消</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%88%86%E7%A6%BB/">线程分离</a>
           </li>
         
       </ul>

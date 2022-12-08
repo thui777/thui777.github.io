@@ -71,12 +71,154 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-读写锁" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/12/08/%E8%AF%BB%E5%86%99%E9%94%81/" class="article-date">
+  <time class="dt-published" datetime="2022-12-08T04:59:36.948Z" itemprop="datePublished">2022-12-08</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/">线程进程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/12/08/%E8%AF%BB%E5%86%99%E9%94%81/">读写锁</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="读写锁原理">读写锁原理</h2>
+<p>在互斥锁锁定的临界区中，所有的线程只能顺序访问，无论是读操作还是写操作，极大影响执行效率，当我们只想对临界资源进行读操作时，那么线程串行读取显然不是最优的，而当对临界资源进行写操作时，这时候串行的写就尤为重要，所以在读写锁中，我们可以控制加锁方式来提高读操作的执行效率，这种锁就叫做读写锁</p>
+<p>在linux中创建一把读写锁：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pthread_rwlock_t</span> rwlock;</span><br></pre></td></tr></table></figure>
+<p>这把锁中记录了一些信息，锁是锁定还是打开的，锁定的线程ID，锁定的是什么操作（读锁定or写锁定），同时只能有一种操作被加锁；</p>
+<h2 id="读写锁的特点">读写锁的特点</h2>
+<ul>
+<li>通过读锁锁定临界区时，线程对临界区的访问是并行的</li>
+<li>通过写锁锁定临界区时，线程对临界区的访问时串行的</li>
+<li>对临界区加锁时，</li>
+</ul>
+<h2 id="读写锁操作函数">读写锁操作函数</h2>
+<h4 id="1-读写锁初始化">1.读写锁初始化</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pthread_rwlock_init</span><span class="params">(<span class="type">pthread_rwlock_t</span> *<span class="keyword">restrict</span> rwlock,</span></span><br><span class="line"><span class="params">                        <span class="type">const</span> <span class="type">pthread_rwlockattr_t</span> *<span class="keyword">restrict</span> attr)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>rwlock：读写锁类型变量地址</li>
+<li>attr：读写锁的属性，一般为默认属性NULL</li>
+</ul>
+</li>
+<li>返回值
+<ul>
+<li>初始化成功返回0，失败返回错误号</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-释放读写锁">2.释放读写锁</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pthread_rwlock_destroy</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>rwlock：读写锁类型变量地址</li>
+</ul>
+</li>
+<li>返回值
+<ul>
+<li>释放成功返回0，失败返回错误号</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-加读锁">3.加读锁</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pthread_rwlock_rdlock</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>rwlock：读写锁类型变量地址</li>
+</ul>
+</li>
+<li>返回值
+<ul>
+<li>加锁成功返回0，失败返回错误号</li>
+</ul>
+</li>
+</ul>
+<p>调用这个函数，如果读写锁是打开的，那么加锁成功，如果读写锁已经锁定了读操作，依然可以加锁成功，因为读锁是共享的；但如果读写锁已经锁定了写操作，那么调用这个线程的函数就会阻塞</p>
+<h4 id="4-尝试加读锁">4.尝试加读锁</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pthread_rwlock_tryrdlock</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>rwlock：读写锁类型变量地址</li>
+</ul>
+</li>
+<li>返回值
+<ul>
+<li>加锁成功返回0，失败返回错误号</li>
+</ul>
+</li>
+</ul>
+<p>调用这个函数，如果读写锁是打开的，那么加锁成功，如果读写锁已经锁定了读操作，依然可以加锁成功，因为读锁是共享的；但如果读写锁已经锁定了写操作，那么调用这个线程的函数不会被阻塞，而是直接返回错误号，可以用来判断加锁失败之后的动作，可以有效的防止死锁</p>
+<h4 id="5-加写锁">5.加写锁</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pthread_rwlock_wrlock</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>rwlock：读写锁类型变量地址</li>
+</ul>
+</li>
+<li>返回值
+<ul>
+<li>加锁成功返回0，失败返回错误号</li>
+</ul>
+</li>
+</ul>
+<p>调用这个函数，如果读写锁是打开的，那么加锁成功；如果读写锁已经锁定了读操作或者锁定了写操作，调用这个函数的线程会被阻塞</p>
+<h4 id="6-尝试加写锁">6.尝试加写锁</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pthread_rwlock_trywrlock</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span>;</span><br></pre></td></tr></table></figure>
+<p>调用这个函数，如果读写锁是打开的，那么加锁成功；如果读写锁已经锁定了读操作或者锁定了写操作，调用这个函数加锁失败，但是线程不会阻塞，可以在程序中对函数返回值进行判断，添加加锁失败之后的处理动作</p>
+<h4 id="7-解锁">7.解锁</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pthread_rwlock_unlock</span><span class="params">(<span class="type">pthread_rwlock_t</span> *rwlock)</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="使用读写锁示例">使用读写锁示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX 10</span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> number = <span class="number">0</span>;</span><br><span class="line"><span class="type">pthread_rwlock_t</span> rwlock;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">readNum</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(i&lt;MAX)</span><br><span class="line">	&#123;</span><br><span class="line">		pthread_rwlock_rdlock(&amp;rwlock);</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;read  number = %d,tid = %ld\r\n&quot;</span>,number,pthread_self());</span><br><span class="line">		pthread_rwlock_unlock(&amp;rwlock);</span><br><span class="line">		usleep(rand()%<span class="number">100</span>);</span><br><span class="line">		i++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">writeNum</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">while</span>(i&lt;MAX)</span><br><span class="line">	&#123;</span><br><span class="line">		pthread_rwlock_wrlock(&amp;rwlock);</span><br><span class="line">		<span class="type">int</span> tmp = number;</span><br><span class="line">		tmp++;</span><br><span class="line">		number = tmp;</span><br><span class="line">		<span class="built_in">printf</span>(<span class="string">&quot;write number = %d,tid = %ld\r\n&quot;</span>,number,pthread_self());</span><br><span class="line">		pthread_rwlock_unlock(&amp;rwlock);</span><br><span class="line">		usleep(rand()%<span class="number">100</span>);</span><br><span class="line">		i++;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">	pthread_rwlock_init(&amp;rwlock, <span class="literal">NULL</span>);</span><br><span class="line">	<span class="type">pthread_t</span> rtid[<span class="number">5</span>];</span><br><span class="line">	<span class="type">pthread_t</span> wtid[<span class="number">3</span>];</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;<span class="number">5</span>;i++)</span><br><span class="line">	&#123;</span><br><span class="line">		pthread_create(&amp;rtid[i],<span class="literal">NULL</span>,readNum,<span class="literal">NULL</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;<span class="number">3</span>;i++)</span><br><span class="line">        &#123;</span><br><span class="line">                pthread_create(&amp;wtid[i],<span class="literal">NULL</span>,writeNum,<span class="literal">NULL</span>);</span><br><span class="line">        &#125;</span><br><span class="line">	<span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>; i&lt;<span class="number">5</span>;i++)</span><br><span class="line">        &#123;       </span><br><span class="line">                pthread_join(rtid[i],<span class="literal">NULL</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i = <span class="number">0</span>;i&lt;<span class="number">3</span>;i++)</span><br><span class="line">        &#123;       </span><br><span class="line">                pthread_join(wtid[i],<span class="literal">NULL</span>);</span><br><span class="line">        &#125;</span><br><span class="line">	pthread_rwlock_destroy(&amp;rwlock);</span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="编译并执行测试程序">编译并执行测试程序</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">read  number = 0,tid = 140107297150528</span><br><span class="line">read  number = 0,tid = 140107288757824</span><br><span class="line">read  number = 0,tid = 140107280365120</span><br><span class="line">read  number = 0,tid = 140107271972416</span><br><span class="line">read  number = 0,tid = 140107263579712</span><br><span class="line">write number = 1,tid = 140107255187008</span><br><span class="line">write number = 2,tid = 140107246794304</span><br><span class="line">write number = 3,tid = 140107238401600</span><br><span class="line">read  number = 3,tid = 140107288757824</span><br><span class="line">read  number = 3,tid = 140107280365120</span><br><span class="line">read  number = 3,tid = 140107297150528</span><br><span class="line">read  number = 3,tid = 140107271972416</span><br><span class="line">read  number = 3,tid = 140107263579712</span><br><span class="line">write number = 4,tid = 140107255187008</span><br><span class="line">read  number = 4,tid = 140107288757824</span><br><span class="line">read  number = 4,tid = 140107297150528</span><br><span class="line">read  number = 4,tid = 140107280365120</span><br><span class="line">read  number = 4,tid = 140107271972416</span><br><span class="line">write number = 5,tid = 140107246794304</span><br><span class="line">write number = 6,tid = 140107238401600</span><br><span class="line">read  number = 6,tid = 140107297150528</span><br><span class="line">read  number = 6,tid = 140107280365120</span><br><span class="line">read  number = 6,tid = 140107288757824</span><br><span class="line">read  number = 6,tid = 140107271972416</span><br><span class="line">read  number = 6,tid = 140107263579712</span><br><span class="line">write number = 7,tid = 140107255187008</span><br><span class="line">read  number = 7,tid = 140107297150528</span><br><span class="line">read  number = 7,tid = 140107280365120</span><br><span class="line">read  number = 7,tid = 140107288757824</span><br><span class="line">read  number = 7,tid = 140107271972416</span><br><span class="line">write number = 8,tid = 140107246794304</span><br><span class="line">write number = 9,tid = 140107238401600</span><br><span class="line">read  number = 9,tid = 140107263579712</span><br><span class="line">read  number = 9,tid = 140107288757824</span><br><span class="line">read  number = 9,tid = 140107280365120</span><br><span class="line">read  number = 9,tid = 140107297150528</span><br><span class="line">read  number = 9,tid = 140107271972416</span><br><span class="line">write number = 10,tid = 140107255187008</span><br><span class="line">write number = 11,tid = 140107246794304</span><br><span class="line">write number = 12,tid = 140107238401600</span><br><span class="line">read  number = 12,tid = 140107280365120</span><br><span class="line">read  number = 12,tid = 140107297150528</span><br><span class="line">read  number = 12,tid = 140107271972416</span><br><span class="line">read  number = 12,tid = 140107288757824</span><br><span class="line">read  number = 12,tid = 140107263579712</span><br><span class="line">write number = 13,tid = 140107255187008</span><br><span class="line">read  number = 13,tid = 140107288757824</span><br><span class="line">read  number = 13,tid = 140107271972416</span><br><span class="line">read  number = 13,tid = 140107297150528</span><br><span class="line">read  number = 13,tid = 140107280365120</span><br><span class="line">write number = 14,tid = 140107246794304</span><br><span class="line">write number = 15,tid = 140107238401600</span><br><span class="line">read  number = 15,tid = 140107263579712</span><br><span class="line">read  number = 15,tid = 140107297150528</span><br><span class="line">read  number = 15,tid = 140107288757824</span><br><span class="line">read  number = 15,tid = 140107280365120</span><br><span class="line">read  number = 15,tid = 140107271972416</span><br><span class="line">write number = 16,tid = 140107246794304</span><br><span class="line">write number = 17,tid = 140107255187008</span><br><span class="line">read  number = 17,tid = 140107288757824</span><br><span class="line">read  number = 17,tid = 140107280365120</span><br><span class="line">read  number = 17,tid = 140107263579712</span><br><span class="line">read  number = 17,tid = 140107297150528</span><br><span class="line">read  number = 17,tid = 140107271972416</span><br><span class="line">write number = 18,tid = 140107238401600</span><br><span class="line">write number = 19,tid = 140107246794304</span><br><span class="line">read  number = 19,tid = 140107263579712</span><br><span class="line">write number = 20,tid = 140107255187008</span><br><span class="line">write number = 21,tid = 140107246794304</span><br><span class="line">write number = 22,tid = 140107238401600</span><br><span class="line">read  number = 22,tid = 140107263579712</span><br><span class="line">write number = 23,tid = 140107255187008</span><br><span class="line">write number = 24,tid = 140107246794304</span><br><span class="line">read  number = 24,tid = 140107263579712</span><br><span class="line">write number = 25,tid = 140107238401600</span><br><span class="line">write number = 26,tid = 140107255187008</span><br><span class="line">write number = 27,tid = 140107238401600</span><br><span class="line">write number = 28,tid = 140107246794304</span><br><span class="line">write number = 29,tid = 140107255187008</span><br><span class="line">write number = 30,tid = 140107238401600</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/12/08/%E8%AF%BB%E5%86%99%E9%94%81/" data-id="clbercd3p00001pci7ggxh0su" data-title="读写锁" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-死锁" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/11/23/%E6%AD%BB%E9%94%81/" class="article-date">
   <time class="dt-published" datetime="2022-11-23T15:24:23.394Z" itemprop="datePublished">2022-11-23</time>
 </a>
     
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/">线程进程</a>
+  </div>
+
   </div>
   <div class="article-inner">
     
@@ -102,8 +244,15 @@
 <p>加锁后忘记解锁，那么下次即使是加锁的线程去访问锁时也会被阻塞起来，那么就这块共享资源就永远不能被访问，就类似于你去图书馆借了一本书，但是你没有把这本书还回去，然后你又去图书馆借这本书，管理员告诉你这本书还没被还回来，需要你等待，然后你也不知道这本书你没有还回来，你就一直在图书馆等待着；</p>
 <h4 id="2-重复加锁">2.重复加锁</h4>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//场景1</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//加锁</span></span><br><span class="line">        pthread_mutex_lock(&amp;mutex);</span><br><span class="line">        <span class="comment">//重复加锁</span></span><br><span class="line">        pthread_mutex_lock(&amp;mutex);</span><br><span class="line">        ......;</span><br><span class="line">        ......;</span><br><span class="line">        pthread_mutex_unlock(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//场景2</span></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback_A</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//加锁</span></span><br><span class="line">        pthread_mutex_lock(&amp;mutex);</span><br><span class="line">        ......;</span><br><span class="line">        ......;</span><br><span class="line">        pthread_mutex_unlock(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback_B</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//加锁</span></span><br><span class="line">        pthread_mutex_lock(&amp;mutex);</span><br><span class="line">        <span class="comment">//在调用其他函数时，其他函数对同一个互斥锁进行了加锁操作</span></span><br><span class="line">        callback_A();</span><br><span class="line">        ......;</span><br><span class="line">        ......;</span><br><span class="line">        pthread_mutex_unlock(&amp;mutex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h4 id="3-相互死锁">3.相互死锁</h4>
+<h4 id="3-相互加锁">3.相互加锁</h4>
 <p>A线程给锁A加了一把锁，然后B线程给锁B加了一把锁，然后线程B在访问锁A时被阻塞起来，线程A在访问锁B时也被阻塞起来，那么此时锁A和锁B都不能被解锁，那么来访问锁A和锁B的线程都会被阻塞，且锁A和锁B永远不会被解锁；</p>
+<h2 id="避免死锁">避免死锁</h2>
+<ul>
+<li>在对共享资源访问完毕之后及时解锁，或者在访问锁时使用trylock函数</li>
+<li>避免多次加锁，多检查</li>
+<li>程序中有多把锁时，在对其他互斥锁做加锁操作之前先释放当前线程拥有的互斥锁</li>
+<li>在程序中引入检测死锁的模块</li>
+</ul>
 
       
     </div>
@@ -151,7 +300,7 @@
 <p>互斥锁是线程同步最常用的一种方式，通过互斥锁锁定一个代码块，被锁定的这个代码块，所有的线程只能顺序执行（不能并行处理），但是需要付出的代价就是执行效率的降低，因为默认临界区多个线程是可以并行处理的，但现在只能串行处理；</p>
 <p>在linux中创建一把互斥锁：</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pthread_mutex_t</span> mutex;</span><br></pre></td></tr></table></figure>
-<p>在创建的锁变量中保存了这把锁的状态信息，比如锁定还是打开的，如果是锁定状态，互斥锁就记录了给这个锁加锁的线程信息（线程ID）；一个互斥锁变量只能被一个线程锁定，被锁定之后其他的线程再对互斥锁加锁就会被阻塞，知道这把锁被解锁，被阻塞的线程才能被解除阻塞；一般来说，每一个共享资源对应一把互斥锁，锁的个数和线程的个数无关；</p>
+<p>在创建的锁变量中保存了这把锁的状态信息，比如锁定还是打开的，如果是锁定状态，互斥锁就记录了给这个锁加锁的线程信息（线程ID）；一个互斥锁变量只能被一个线程锁定，被锁定之后其他的线程再对互斥锁加锁就会被阻塞，直到这把锁被解锁；一般来说，每一个共享资源对应一把互斥锁，锁的个数和线程的个数无关；</p>
 <h2 id="互斥锁操作函数">互斥锁操作函数</h2>
 <h4 id="1-互斥锁初始化">1.互斥锁初始化</h4>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">pthread_mutex_init</span><span class="params">(<span class="type">pthread_mutex_t</span> *<span class="keyword">restrict</span> mutex,</span></span><br><span class="line"><span class="params">                       <span class="type">const</span> <span class="type">pthread_mutexattr_t</span> *<span class="keyword">restrict</span> attr)</span>;</span><br></pre></td></tr></table></figure>
@@ -699,63 +848,6 @@
 
 
   
-    <article id="post-源文件保存" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" class="article-date">
-  <time class="dt-published" datetime="2022-11-16T04:00:37.842Z" itemprop="datePublished">2022-11-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hexo/">hexo</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/">3.源文件保存</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <hr>
-<h2 id="前言">前言</h2>
-<p>除了网页静态文件以外，我们应该把源文件也提交到github上进行备份，以防止本地源文件被误删后需要重新配置，顺带熟悉一下git的使用；</p>
-<h2 id="推送源码">推送源码</h2>
-<h4 id="1-进入blog文件夹进行git初始化">1.进入blog文件夹进行git初始化</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br></pre></td></tr></table></figure>
-<h4 id="2-创建hexo分支，用来存放源码">2.创建hexo分支，用来存放源码</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">创建分支</span></span><br><span class="line">git branch hexo</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">切换分支</span></span><br><span class="line">git checkout hexo</span><br></pre></td></tr></table></figure>
-<h4 id="3-提交源码到github">3.提交源码到github</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">提交到暂存区</span></span><br><span class="line">git add .</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">把暂存区内容提交到当前分支</span></span><br><span class="line">git commit -m &quot;init&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加远程仓库</span></span><br><span class="line">git remote add origin git remote add origin git@github.com:thui777/thui777.github.io.git</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">推送分支</span></span><br><span class="line">git push origin hexo</span><br></pre></td></tr></table></figure>
-<h2 id="拉取分支">拉取分支</h2>
-<h4 id="1-切换hexo分支">1.切换hexo分支</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo checkout hexo</span><br></pre></td></tr></table></figure>
-<h4 id="2-拉去分支合并到当前分支">2.拉去分支合并到当前分支</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git pull orgin hexo</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/" data-id="claqxogbq0004bpci77z6d73a" data-title="3.源文件保存" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -786,7 +878,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li></ul>
     </div>
   </div>
 
@@ -797,6 +889,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2022/12/08/%E8%AF%BB%E5%86%99%E9%94%81/">读写锁</a>
+          </li>
         
           <li>
             <a href="/2022/11/23/%E6%AD%BB%E9%94%81/">死锁</a>
@@ -812,10 +908,6 @@
         
           <li>
             <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/">线程取消</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%88%86%E7%A6%BB/">线程分离</a>
           </li>
         
       </ul>
