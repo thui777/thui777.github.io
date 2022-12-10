@@ -4,21 +4,21 @@
   <meta charset="utf-8">
   
   
-  <title>线程同步 | thui_rwx</title>
+  <title>线程同步 | thui</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="线程同步概念 1.临界资源（共享资源） 在程序中，有的资源保存在堆区或者全局区，像这样可以供不同线程访问的资源，我们叫做临界资源或者共享资源； 2.多个线程访问相同的临界资源会出现什么问题？ 在程序中有多个线程时，每个线程都可以对临界区的资源进行访问，在分时复用系统中，A线程在访问临界区资源的同时，如果它的时间片已经使用完，那么就会进行上下文切换，此时对这个临界资源的修改会暂时的保存在寄存器中，">
 <meta property="og:type" content="article">
 <meta property="og:title" content="线程同步">
 <meta property="og:url" content="http://example.com/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/index.html">
-<meta property="og:site_name" content="thui_rwx">
+<meta property="og:site_name" content="thui">
 <meta property="og:description" content="线程同步概念 1.临界资源（共享资源） 在程序中，有的资源保存在堆区或者全局区，像这样可以供不同线程访问的资源，我们叫做临界资源或者共享资源； 2.多个线程访问相同的临界资源会出现什么问题？ 在程序中有多个线程时，每个线程都可以对临界区的资源进行访问，在分时复用系统中，A线程在访问临界区资源的同时，如果它的时间片已经使用完，那么就会进行上下文切换，此时对这个临界资源的修改会暂时的保存在寄存器中，">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-11-22T15:10:08.376Z">
-<meta property="article:modified_time" content="2022-11-23T04:59:47.000Z">
-<meta property="article:author" content="thui">
+<meta property="article:modified_time" content="2022-12-10T17:02:11.000Z">
+<meta property="article:author" content="By thui">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="thui_rwx" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="thui" type="application/atom+xml">
   
   
     <link rel="shortcut icon" href="/favicon.png">
@@ -46,7 +46,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">thui_rwx</a>
+        <a href="/" id="logo">thui</a>
       </h1>
       
     </div>
@@ -80,7 +80,7 @@
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/">线程进程</a>
+    <a class="article-category-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/">linux应用编程</a>►<a class="article-category-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/%E7%BA%BF%E7%A8%8B/">线程</a>
   </div>
 
   </div>
@@ -164,7 +164,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/">线程进程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/">linux应用编程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/%E7%BA%BF%E7%A8%8B/">线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a></li></ul>
     </div>
   </div>
 
@@ -192,6 +192,10 @@
       <ul>
         
           <li>
+            <a href="/2022/12/11/%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/">条件变量</a>
+          </li>
+        
+          <li>
             <a href="/2022/12/08/%E8%AF%BB%E5%86%99%E9%94%81/">读写锁</a>
           </li>
         
@@ -207,10 +211,6 @@
             <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/">线程同步</a>
           </li>
         
-          <li>
-            <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/">线程取消</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -224,7 +224,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2022 thui<br>
+      &copy; 2022 By thui<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

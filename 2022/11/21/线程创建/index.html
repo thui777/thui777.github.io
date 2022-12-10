@@ -4,21 +4,21 @@
   <meta charset="utf-8">
   
   
-  <title>线程创建 | thui_rwx</title>
+  <title>线程创建 | thui</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="返回线程ID函数 每一个线程都有一个唯一的线程ID，ID类型为pthread_t，为无符号长整型，想要得到线程ID则可使用函数； 返回线程ID函数原型： 1pthread_t pthraed_self(void);  返回参数  pthread_t：线程ID    线程创建函数 在一个线程中调用线程创建函数，就可以得到一个子线程，和进程不同，需要给每一个创建出的线程指定一个线程处理函数，否则该子">
 <meta property="og:type" content="article">
 <meta property="og:title" content="线程创建">
 <meta property="og:url" content="http://example.com/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/index.html">
-<meta property="og:site_name" content="thui_rwx">
+<meta property="og:site_name" content="thui">
 <meta property="og:description" content="返回线程ID函数 每一个线程都有一个唯一的线程ID，ID类型为pthread_t，为无符号长整型，想要得到线程ID则可使用函数； 返回线程ID函数原型： 1pthread_t pthraed_self(void);  返回参数  pthread_t：线程ID    线程创建函数 在一个线程中调用线程创建函数，就可以得到一个子线程，和进程不同，需要给每一个创建出的线程指定一个线程处理函数，否则该子">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2022-11-21T15:16:27.390Z">
-<meta property="article:modified_time" content="2022-11-23T04:55:01.000Z">
-<meta property="article:author" content="thui">
+<meta property="article:modified_time" content="2022-12-10T17:02:01.000Z">
+<meta property="article:author" content="By thui">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="thui_rwx" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="thui" type="application/atom+xml">
   
   
     <link rel="shortcut icon" href="/favicon.png">
@@ -46,7 +46,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">thui_rwx</a>
+        <a href="/" id="logo">thui</a>
       </h1>
       
     </div>
@@ -80,7 +80,7 @@
 </a>
     
   <div class="article-category">
-    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/">线程进程</a>
+    <a class="article-category-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/">linux应用编程</a>►<a class="article-category-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/%E7%BA%BF%E7%A8%8B/">线程</a>
   </div>
 
   </div>
@@ -178,7 +178,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Categories</h3>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux/">linux</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B%E8%BF%9B%E7%A8%8B/">线程进程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo/">hexo</a></li><li class="category-list-item"><a class="category-list-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/">linux应用编程</a><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/%E7%BA%BF%E7%A8%8B/">线程</a></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/ubuntu/">ubuntu</a></li></ul>
     </div>
   </div>
 
@@ -206,6 +206,10 @@
       <ul>
         
           <li>
+            <a href="/2022/12/11/%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/">条件变量</a>
+          </li>
+        
+          <li>
             <a href="/2022/12/08/%E8%AF%BB%E5%86%99%E9%94%81/">读写锁</a>
           </li>
         
@@ -221,10 +225,6 @@
             <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/">线程同步</a>
           </li>
         
-          <li>
-            <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/">线程取消</a>
-          </li>
-        
       </ul>
     </div>
   </div>
@@ -238,7 +238,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2022 thui<br>
+      &copy; 2022 By thui<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
