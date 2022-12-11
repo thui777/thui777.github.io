@@ -71,6 +71,84 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-线程创建" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/" class="article-date">
+  <time class="dt-published" datetime="2022-11-21T15:16:27.390Z" itemprop="datePublished">2022-11-21</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/">linux应用编程</a>►<a class="article-category-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/%E7%BA%BF%E7%A8%8B/">线程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/">线程创建</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="返回线程ID函数">返回线程ID函数</h2>
+<p>每一个线程都有一个唯一的线程ID，ID类型为pthread_t，为无符号长整型，想要得到线程ID则可使用函数；</p>
+<p>返回线程ID函数原型：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pthread_t</span> <span class="title function_">pthraed_self</span><span class="params">(<span class="type">void</span>)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>返回参数
+<ul>
+<li>pthread_t：线程ID</li>
+</ul>
+</li>
+</ul>
+<h2 id="线程创建函数">线程创建函数</h2>
+<p>在一个线程中调用线程创建函数，就可以得到一个子线程，和进程不同，需要给每一个创建出的线程指定一个线程处理函数，否则该子线程无法正常工作；</p>
+<p>创建线程函数原型：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">pthread_create</span><span class="params">(<span class="type">pthread_t</span> *thread,</span></span><br><span class="line"><span class="params">                   <span class="type">const</span> <span class="type">pthread_arr_t</span> *arrt,</span></span><br><span class="line"><span class="params">                   <span class="type">void</span> *(*start_routine)(<span class="type">void</span> *),</span></span><br><span class="line"><span class="params">                   <span class="type">void</span> *arg)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>thread：传出参数，无符号长整型，创建成功将子线程ID写入thread</li>
+<li>arrt：线程属性，一般为空</li>
+<li>start_routine：函数指针，指向子线程处理函数</li>
+<li>arg：传递参数，作为实参传递到start_routine函数内部</li>
+</ul>
+</li>
+<li>返回值
+<ul>
+<li>成功返回0，失败返回错误号</li>
+</ul>
+</li>
+</ul>
+<h2 id="创建线程示例">创建线程示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程，线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    <span class="comment">//创建子线程，子线程处理函数为callback，传递参数为NULL，属性为NULL</span></span><br><span class="line">    pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功，线程ID：%lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程，线程ID：%lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//主线程阻塞1秒</span></span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="编译并执行测试程序">编译并执行测试程序</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">thui777@thui777-VirtualBox:~/work/linux$ ./main </span><br><span class="line">子线程创建成功，线程ID：140206938711616</span><br><span class="line">我是主线程，线程ID：140206938715968</span><br><span class="line">我是子线程，线程ID：140206938711616</span><br></pre></td></tr></table></figure>
+<p>可以发现是先执行的主线程，再执行的子线程，因为线程执行顺序并不是像一般的C程序，先执行子线程，然后子线程执行结束再回到主线程执行，而是在子线程创建成功之后，子线程就会抢占时间片，如果在子线程还没抢占成功之前主线程就已经执行结束，那么进程的虚拟地址空间就会被回收，子线程就再也不会执行；所以说进程是资源分配的最小单位，而线程是系统调度执行的最小单位；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/" data-id="claqxogbt0006bpci9sba2non" data-title="线程创建" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-环境变量设置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/" class="article-date">
@@ -446,6 +524,10 @@
       <ul>
         
           <li>
+            <a href="/2022/12/12/%E4%BF%A1%E5%8F%B7%E9%87%8F/">信号量</a>
+          </li>
+        
+          <li>
             <a href="/2022/12/11/%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/">条件变量</a>
           </li>
         
@@ -459,10 +541,6 @@
         
           <li>
             <a href="/2022/11/23/%E4%BA%92%E6%96%A5%E9%94%81/">互斥锁</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/">线程同步</a>
           </li>
         
       </ul>

@@ -71,6 +71,135 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-信号量" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/12/12/%E4%BF%A1%E5%8F%B7%E9%87%8F/" class="article-date">
+  <time class="dt-published" datetime="2022-12-11T16:54:14.129Z" itemprop="datePublished">2022-12-12</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/">linux应用编程</a>►<a class="article-category-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/%E7%BA%BF%E7%A8%8B/">线程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/12/12/%E4%BF%A1%E5%8F%B7%E9%87%8F/">信号量</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="信号量的作用">信号量的作用</h2>
+<p>信号量主要用于多线程多任务同步，一个线程完成了某个动作就通过信号量告诉别的线程，别的线程再进行某些动作；信号量不一定是锁定某一个资源，是流程上的概念，比如A,B两个线程，B线程需要等待A线程完成某些任务后再进行自己的任务，这个任务并不一定是锁定某一资源，还可以是进行一些计算或者数据处理之类的；信号量也是用来阻塞线程的，但是不能完全保证线程安全，如果需要保证线程安全需要配合和互斥锁一起使用，信号量和条件变量一样用于处理生产者和消费者模型，用于阻塞生产者线程或者消费者线程的运行</p>
+<p>linux中定义一个信号量：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;semaphore.h&gt;</span></span></span><br><span class="line"><span class="type">sem_t</span> sem;</span><br></pre></td></tr></table></figure>
+<h2 id="信号量操作函数">信号量操作函数</h2>
+<h4 id="1-信号量初始化函数">1.信号量初始化函数</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">sem_init</span><span class="params">(<span class="type">sem_t</span> *sem, </span></span><br><span class="line"><span class="params">             <span class="type">int</span> pshared, </span></span><br><span class="line"><span class="params">             <span class="type">unsigned</span> <span class="type">int</span> value)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>sem：信号量变量地址</li>
+<li>pshared：
+<ul>
+<li>0：线程同步</li>
+<li>非0：进程同步</li>
+</ul>
+</li>
+<li>value：初始化当前信号量拥有的资源数（&gt;=0），如果资源数为0，线程就会被阻塞</li>
+</ul>
+</li>
+</ul>
+<h4 id="2-信号量资源释放函数">2.信号量资源释放函数</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">sem_destroy</span><span class="params">(<span class="type">sem_t</span> *sem)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>sem：信号量变量地址</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-资源消耗函数">3.资源消耗函数</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">sem_wait</span><span class="params">(<span class="type">sem_t</span> *sem)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>sem：信号量变量地址</li>
+</ul>
+</li>
+</ul>
+<p>当线程调用这个函数，并且sem中的资源数大于0时，线程会占用掉sem中的一个资源，总资源数-1，当sem中的资源数变为0时，下一个调用该函数的线程会因为得不到资源而阻塞起来</p>
+<h4 id="4-尝试资源消耗函数">4.尝试资源消耗函数</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">sem_trywait</span><span class="params">(<span class="type">sem_t</span> *sem)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>sem：信号量变量地址</li>
+</ul>
+</li>
+</ul>
+<p>调用这个函数和上面一个函数类似，只是当没有资源时，线程不会被阻塞，而是直接返回错误号，因此可以在函数中添加判断分支，用于处理获取资源失败之后的情况</p>
+<h4 id="5-定时阻塞函数">5.定时阻塞函数</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">sem_timedwait</span><span class="params">(<span class="type">sem_t</span> *sem, </span></span><br><span class="line"><span class="params">                  <span class="type">const</span> <span class="keyword">struct</span> timespec *abs_timeout)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>sem：信号量变量地址</li>
+<li>abs_timeout：阻塞时长结构体变量的地址</li>
+</ul>
+</li>
+</ul>
+<p>该函数的参数 abs_timeout 和 pthread_cond_timedwait 的最后一个参数是一样的，调用这个函数也和上面函数类型，只是当没有资源时，线程会阻塞指定的时长，过后线程自动解除阻塞</p>
+<h4 id="6-资源释放函数">6.资源释放函数</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">sem_post</span><span class="params">(<span class="type">sem_t</span> *sem)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>sem：信号量变量的地址</li>
+</ul>
+</li>
+</ul>
+<p>调用该函数会将sem中的资源数+1，如果有线程在调用资源消耗函数时因为没有资源而被阻塞了，那么这些线程将会被唤醒，解除阻塞，然后获取资源继续向下运行</p>
+<h4 id="7-获取资源数函数">7.获取资源数函数</h4>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">sem_getvalue</span><span class="params">(<span class="type">sem_t</span> *sem,</span></span><br><span class="line"><span class="params">                 <span class="type">int</span> *sval)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>sem：信号量变量地址</li>
+<li>sval：传出参数，将资源数写入该参数</li>
+</ul>
+</li>
+</ul>
+<p>通过这个函数可以查看sem中现在拥有的资源个数，通过第二个参数将数据传入上层空间，类似于返回值</p>
+<h2 id="信号量使用示例">信号量使用示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;semaphore.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//使用信号量实现生产者和消费者模型，生产者有5个，消费者也有5个，仓库总只有5个资源位置</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="type">int</span> data;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">node</span> *<span class="title">next</span>;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">node</span> *<span class="title">head</span> =</span> <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">sem_t</span> psem;</span><br><span class="line"><span class="type">sem_t</span> csem;</span><br><span class="line"><span class="type">pthread_mutex_t</span> mutex;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">producer</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//生产者取走一个信号量资源</span></span><br><span class="line">        sem_wait(&amp;psem);</span><br><span class="line">        <span class="comment">//加锁</span></span><br><span class="line">        pthread_mutex_lock(&amp;mutex);</span><br><span class="line">        <span class="comment">//上面两行代码不可以互换，可能会造成死锁</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">node</span> *<span class="title">temp</span> =</span> (<span class="keyword">struct</span> node *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> node));</span><br><span class="line">        temp-&gt;data = rand()%<span class="number">1000</span>;</span><br><span class="line">        temp-&gt;next = head;</span><br><span class="line">        head = temp;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;produser tid = %ld, data = %d\r\n&quot;</span>,pthread_self(), temp-&gt;data);</span><br><span class="line">        <span class="comment">//解锁</span></span><br><span class="line">        pthread_mutex_unlock(&amp;mutex);</span><br><span class="line">        <span class="comment">//给到消费者一个信号量资源</span></span><br><span class="line">        sem_post(&amp;csem);</span><br><span class="line">        sleep(rand()%<span class="number">3</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">consumer</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//消费者取走一个信号量资源，开始没有资源，线程在这里阻塞</span></span><br><span class="line">        sem_wait(&amp;csem);</span><br><span class="line">        <span class="comment">//加锁</span></span><br><span class="line">        pthread_mutex_lock(&amp;mutex);</span><br><span class="line">        <span class="comment">//上面两行代码不可以互换，可能会造成死锁</span></span><br><span class="line">        <span class="class"><span class="keyword">struct</span> <span class="title">node</span> *<span class="title">temp</span> =</span> head;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;consumer tid = %ld, data = %d\r\n&quot;</span>,pthread_self(), temp-&gt;data);</span><br><span class="line">        head = temp-&gt;next;</span><br><span class="line">        <span class="built_in">free</span>(temp);</span><br><span class="line">        <span class="comment">//解锁</span></span><br><span class="line">        pthread_mutex_unlock(&amp;mutex);</span><br><span class="line">        <span class="comment">//给到生产者一个信号量资源</span></span><br><span class="line">        sem_post(&amp;psem);</span><br><span class="line">        sleep(rand()%<span class="number">3</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    pthread_mutex_init(&amp;mutex,<span class="literal">NULL</span>);</span><br><span class="line">    sem_init(&amp;psem, <span class="number">0</span>, <span class="number">5</span>);</span><br><span class="line">    sem_init(&amp;csem, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="type">pthread_t</span> ptid[<span class="number">5</span>],ctid[<span class="number">5</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        pthread_create(&amp;ptid[i],<span class="literal">NULL</span>,producer,<span class="literal">NULL</span>);</span><br><span class="line">        pthread_create(&amp;ctid[i],<span class="literal">NULL</span>,consumer,<span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>; i&lt;<span class="number">5</span>; i++)</span><br><span class="line">    &#123;</span><br><span class="line">        pthread_join(ptid[i],<span class="literal">NULL</span>);</span><br><span class="line">        pthread_join(ctid[i],<span class="literal">NULL</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    pthread_mutex_destroy(&amp;mutex);</span><br><span class="line">    sem_destroy(&amp;psem);</span><br><span class="line">    sem_destroy(&amp;csem);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="编译并执行测试程序">编译并执行测试程序</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">produser tid = 140042414900800, data = 383</span><br><span class="line">consumer tid = 140042423293504, data = 383</span><br><span class="line">produser tid = 140042398115392, data = 915</span><br><span class="line">consumer tid = 140042406508096, data = 915</span><br><span class="line">produser tid = 140042381329984, data = 386</span><br><span class="line">consumer tid = 140042423293504, data = 386</span><br><span class="line">produser tid = 140042364544576, data = 421</span><br><span class="line">consumer tid = 140042389722688, data = 421</span><br><span class="line">produser tid = 140042431686208, data = 690</span><br><span class="line">consumer tid = 140042372937280, data = 690</span><br><span class="line">produser tid = 140042381329984, data = 926</span><br><span class="line">consumer tid = 140042356151872, data = 926</span><br><span class="line">produser tid = 140042381329984, data = 172</span><br><span class="line">consumer tid = 140042423293504, data = 172</span><br><span class="line">produser tid = 140042414900800, data = 368</span><br><span class="line">consumer tid = 140042356151872, data = 368</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/12/12/%E4%BF%A1%E5%8F%B7%E9%87%8F/" data-id="clbjlw0jm00009xcidvq342r9" data-title="信号量" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-条件变量" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/12/11/%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/" class="article-date">
@@ -865,84 +994,6 @@
 
 
   
-    <article id="post-线程创建" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/" class="article-date">
-  <time class="dt-published" datetime="2022-11-21T15:16:27.390Z" itemprop="datePublished">2022-11-21</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/">linux应用编程</a>►<a class="article-category-link" href="/categories/linux%E5%BA%94%E7%94%A8%E7%BC%96%E7%A8%8B/%E7%BA%BF%E7%A8%8B/">线程</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/">线程创建</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <hr>
-<h2 id="返回线程ID函数">返回线程ID函数</h2>
-<p>每一个线程都有一个唯一的线程ID，ID类型为pthread_t，为无符号长整型，想要得到线程ID则可使用函数；</p>
-<p>返回线程ID函数原型：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">pthread_t</span> <span class="title function_">pthraed_self</span><span class="params">(<span class="type">void</span>)</span>;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>返回参数
-<ul>
-<li>pthread_t：线程ID</li>
-</ul>
-</li>
-</ul>
-<h2 id="线程创建函数">线程创建函数</h2>
-<p>在一个线程中调用线程创建函数，就可以得到一个子线程，和进程不同，需要给每一个创建出的线程指定一个线程处理函数，否则该子线程无法正常工作；</p>
-<p>创建线程函数原型：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="type">int</span> <span class="title function_">pthread_create</span><span class="params">(<span class="type">pthread_t</span> *thread,</span></span><br><span class="line"><span class="params">                   <span class="type">const</span> <span class="type">pthread_arr_t</span> *arrt,</span></span><br><span class="line"><span class="params">                   <span class="type">void</span> *(*start_routine)(<span class="type">void</span> *),</span></span><br><span class="line"><span class="params">                   <span class="type">void</span> *arg)</span>;</span><br></pre></td></tr></table></figure>
-<ul>
-<li>参数
-<ul>
-<li>thread：传出参数，无符号长整型，创建成功将子线程ID写入thread</li>
-<li>arrt：线程属性，一般为空</li>
-<li>start_routine：函数指针，指向子线程处理函数</li>
-<li>arg：传递参数，作为实参传递到start_routine函数内部</li>
-</ul>
-</li>
-<li>返回值
-<ul>
-<li>成功返回0，失败返回错误号</li>
-</ul>
-</li>
-</ul>
-<h2 id="创建线程示例">创建线程示例</h2>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程，线程ID：%lu\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    <span class="comment">//创建子线程，子线程处理函数为callback，传递参数为NULL，属性为NULL</span></span><br><span class="line">    pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功，线程ID：%lu\r\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程，线程ID：%lu\r\n&quot;</span>, pthread_self());</span><br><span class="line">    <span class="comment">//主线程阻塞1秒</span></span><br><span class="line">    sleep(<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="编译并执行测试程序">编译并执行测试程序</h2>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">thui777@thui777-VirtualBox:~/work/linux$ ./main </span><br><span class="line">子线程创建成功，线程ID：140206938711616</span><br><span class="line">我是主线程，线程ID：140206938715968</span><br><span class="line">我是子线程，线程ID：140206938711616</span><br></pre></td></tr></table></figure>
-<p>可以发现是先执行的主线程，再执行的子线程，因为线程执行顺序并不是像一般的C程序，先执行子线程，然后子线程执行结束再回到主线程执行，而是在子线程创建成功之后，子线程就会抢占时间片，如果在子线程还没抢占成功之前主线程就已经执行结束，那么进程的虚拟地址空间就会被回收，子线程就再也不会执行；所以说进程是资源分配的最小单位，而线程是系统调度执行的最小单位；</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/21/%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/" data-id="claqxogbt0006bpci9sba2non" data-title="线程创建" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
@@ -986,6 +1037,10 @@
       <ul>
         
           <li>
+            <a href="/2022/12/12/%E4%BF%A1%E5%8F%B7%E9%87%8F/">信号量</a>
+          </li>
+        
+          <li>
             <a href="/2022/12/11/%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/">条件变量</a>
           </li>
         
@@ -999,10 +1054,6 @@
         
           <li>
             <a href="/2022/11/23/%E4%BA%92%E6%96%A5%E9%94%81/">互斥锁</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/">线程同步</a>
           </li>
         
       </ul>
