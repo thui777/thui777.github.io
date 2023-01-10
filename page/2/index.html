@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>thui</title>
+  <title>likeStarshine</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta property="og:type" content="website">
-<meta property="og:title" content="thui">
+<meta property="og:title" content="likeStarshine">
 <meta property="og:url" content="http://example.com/page/2/index.html">
-<meta property="og:site_name" content="thui">
+<meta property="og:site_name" content="likeStarshine">
 <meta property="og:locale" content="en_US">
 <meta property="article:author" content="By thui">
 <meta name="twitter:card" content="summary">
   
-    <link rel="alternate" href="/atom.xml" title="thui" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="likeStarshine" type="application/atom+xml">
   
   
     <link rel="shortcut icon" href="/favicon.png">
@@ -42,7 +42,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">thui</a>
+        <a href="/" id="logo">likeStarshine</a>
       </h1>
       
     </div>
@@ -70,6 +70,137 @@
 
       <div class="outer">
         <section id="main">
+  
+    <article id="post-线程同步" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/" class="article-date">
+  <time class="dt-published" datetime="2022-11-22T15:10:08.376Z" itemprop="datePublished">2022-11-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B/">线程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/">线程同步</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="线程同步概念">线程同步概念</h2>
+<h4 id="1-临界资源（共享资源）">1.临界资源（共享资源）</h4>
+<p>在程序中，有的资源保存在堆区或者全局区，像这样可以供不同线程访问的资源，我们叫做临界资源或者共享资源；</p>
+<h4 id="2-多个线程访问相同的临界资源会出现什么问题？">2.多个线程访问相同的临界资源会出现什么问题？</h4>
+<p>在程序中有多个线程时，每个线程都可以对临界区的资源进行访问，在分时复用系统中，A线程在访问临界区资源的同时，如果它的时间片已经使用完，那么就会进行上下文切换，此时对这个临界资源的修改会暂时的保存在寄存器中，而不会写入到内存；当B线程也来访问这个临界资源时，B线程会直接从内存资源中进行读取，等到B线程处理完毕把数据写入内存后又切换回A线程时，A线程就会把没及时写入内存的数据写入进去，此时相当于B线程对这个临界资源的修改是无效的，这显然对程序来说不是一个好的结果，为了解决这个问题，我们就需要使用线程同步；</p>
+<h4 id="3-什么是线程同步？">3.什么是线程同步？</h4>
+<p>当A线程在访问一个临界资源时，如果他的时间片使用完了，那么它会把这个临界资源给锁起来，然后B线程来访问这个资源时，就会被阻塞，阻塞掉之后就会切换回A线程就会继续执行，等待A线程执行完毕，然后再切换到B线程时，B线程就可以正常访问临界资源；我们可以得出线程同步的概念，实际上就是让线程访问临界资源时一个一个的访问，一个线程访问完毕之后另一个线程才能开始访问，没访问完毕时就给它锁起来，以防止临界资源出现数据混乱的问题；</p>
+<h2 id="线程同步的方式">线程同步的方式</h2>
+<p>常用的线程同步方式有四种：互斥锁，读写锁，条件变量，信号量；找到临界资源之后，再找到和临界资源相关的上下文代码，这样就可以得到一个代码块，这个代码块可以称为临界区；确定临界区之后，就可以进行线程同步了，具体思路是：</p>
+<ul>
+<li>在临界区的上面添加加锁函数，对临界区加锁</li>
+<li>哪个线程调用这句代码，就会把这把锁锁上，其他的线程就只能阻塞在锁上</li>
+<li>在临界区的下边添加解锁函数，对临界区解锁</li>
+<li>线程在出临界区时就会把那把锁打开，其他抢到锁的线程就可以进入到临界区</li>
+</ul>
+<p>通过锁机制能保证临界区代码最多只能同时有一个线程访问，这个就可以把并行访问变为串行访问了；</p>
+<h2 id="未使用线程同步的示例">未使用线程同步的示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX 10</span></span><br><span class="line"><span class="type">int</span> number = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">fun_A</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;MAX)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> a = number;</span><br><span class="line">        a++;</span><br><span class="line">        <span class="comment">//加延时是为了模拟时间片使用完成但还没有写入内存的情况</span></span><br><span class="line">        usleep(<span class="number">5</span>);</span><br><span class="line">        number = a;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;thread A，ID = %ld，number = %d\r\n&quot;</span>,pthread_self(), number);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">fun_B</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;MAX)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> b = number;</span><br><span class="line">        b++;</span><br><span class="line">        usleep(<span class="number">10</span>);</span><br><span class="line">        number = b;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;thread B，ID = %ld，number = %d\r\n&quot;</span>,pthread_self(), number);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> thread_A;</span><br><span class="line">    <span class="type">pthread_t</span> thread_B;</span><br><span class="line">    pthread_create(&amp;thread_A, <span class="literal">NULL</span>, fun_A, <span class="literal">NULL</span>);</span><br><span class="line">    pthread_create(&amp;thread_B, <span class="literal">NULL</span>, fun_B, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;线程A创建成功，线程ID：%ld\r\n&quot;</span>,thread_A);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;线程B创建成功，线程ID：%ld\r\n&quot;</span>,thread_B);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程，线程ID：%ld\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="comment">//退出主线程</span></span><br><span class="line">    pthread_exit(<span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="编译并执行测试程序">编译并执行测试程序</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">线程A创建成功，线程ID：140696243705408</span><br><span class="line">线程B创建成功，线程ID：140696235312704</span><br><span class="line">我是主线程，线程ID：140696243709760</span><br><span class="line">thread A，ID = 140696243705408，number = 1</span><br><span class="line">thread B，ID = 140696235312704，number = 2</span><br><span class="line">thread A，ID = 140696243705408，number = 3</span><br><span class="line">thread B，ID = 140696235312704，number = 4</span><br><span class="line">thread B，ID = 140696235312704，number = 6</span><br><span class="line">thread A，ID = 140696243705408，number = 6</span><br><span class="line">thread A，ID = 140696243705408，number = 7</span><br><span class="line">thread B，ID = 140696235312704，number = 7</span><br><span class="line">thread B，ID = 140696235312704，number = 9</span><br><span class="line">thread A，ID = 140696243705408，number = 9</span><br><span class="line">thread A，ID = 140696243705408，number = 10</span><br><span class="line">thread B，ID = 140696235312704，number = 10</span><br><span class="line">thread B，ID = 140696235312704，number = 12</span><br><span class="line">thread A，ID = 140696243705408，number = 12</span><br><span class="line">thread A，ID = 140696243705408，number = 13</span><br><span class="line">thread B，ID = 140696235312704，number = 13</span><br><span class="line">thread B，ID = 140696235312704，number = 15</span><br><span class="line">thread A，ID = 140696243705408，number = 15</span><br><span class="line">thread A，ID = 140696243705408，number = 16</span><br><span class="line">thread B，ID = 140696235312704，number = 16</span><br></pre></td></tr></table></figure>
+<p>每一次的模拟结果都可能不同，这就代表了在不进行线程同步的情况下产生的结果是随机的，这会给程序带来致命的打击；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/" data-id="clasctuhx0000t6cieq400b9v" data-title="线程同步" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-线程取消" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/" class="article-date">
+  <time class="dt-published" datetime="2022-11-22T10:05:27.649Z" itemprop="datePublished">2022-11-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B/">线程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/">线程取消</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="线程取消函数">线程取消函数</h2>
+<p>线程取消的含义是在满足某些条件下在一个线程中杀死另一个线程，使用线程取消函数杀死一个线程需要分为两步：</p>
+<ol>
+<li>在线程A中调用线程取消函数pthread_cancel，指定杀死线程B，此时线程B还没有死</li>
+<li>在线程B中进行系统调用时（用户区切换到内核区），线程B此时被杀死，如果线程B一直得不到系统调用，那么线程B可以一直运行</li>
+</ol>
+<p>线程取消函数原型：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">pthread_cancel</span><span class="params">(<span class="type">pthread_t</span> thread)</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>参数
+<ul>
+<li>thread：要杀死的线程ID</li>
+</ul>
+</li>
+<li>返回值
+<ul>
+<li>函数调用成功返回0，调用失败返回错误号</li>
+</ul>
+</li>
+</ul>
+<h2 id="线程取消示例">线程取消示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">callback</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//printf函数会间接的进行系统调用，线程运行到这里就被杀死了</span></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是子线程，线程ID：%ld，得到系统调用，子线程被杀死\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> tid;</span><br><span class="line">    pthread_create(&amp;tid, <span class="literal">NULL</span>, callback, <span class="literal">NULL</span>);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;子线程创建成功, 线程ID：%ld\n&quot;</span>, tid);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程, 线程ID：%ld\n&quot;</span>, pthread_self());</span><br><span class="line">   	<span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;<span class="number">5</span>)</span><br><span class="line">    &#123;</span><br><span class="line">        i++;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;主线程运行中，i = %d\r\n&quot;</span>,i);</span><br><span class="line">    &#125;</span><br><span class="line">    pthread_exit(<span class="literal">NULL</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="编译并执行测试程序">编译并执行测试程序</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">子线程创建成功，线程ID：140686659323456</span><br><span class="line">我是主线程，线程ID：140686659327808</span><br><span class="line">主线程运行中，i = 1</span><br><span class="line">主线程运行中，i = 2</span><br><span class="line">主线程运行中，i = 3</span><br><span class="line">主线程运行中，i = 4</span><br><span class="line">主线程运行中，i = 5</span><br><span class="line">我是子线程，线程ID：140686659323456，得到系统调用，子线程被杀死</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/" data-id="clas1xqvv00016hci2gz35kdj" data-title="线程取消" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
   
     <article id="post-线程分离" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
@@ -559,125 +690,11 @@
 
 
   
-    <article id="post-添加图片" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/" class="article-date">
-  <time class="dt-published" datetime="2022-11-16T04:00:37.825Z" itemprop="datePublished">2022-11-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hexo/">hexo</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/">5.添加图片</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <hr>
-<h2 id="前言">前言</h2>
-<p>在写博客时除了代码和文本以外，怎么插入图像是非常要重要的，这里记录一下插入方法，方便以后查阅</p>
-<h2 id="步骤">步骤</h2>
-<h4 id="1-先打开Typero的偏好设置，选择图像">1.先打开Typero的偏好设置，选择图像</h4>
-<p><img src="/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/image-20221116143346854.png" alt></p>
-<h4 id="2-下载插件">2.下载插件</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install https://github.com/CodeFalling/hexo-asset-image --save</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">直接用下面这个是显示不了图片的</span></span><br><span class="line">npm install hexo-asset-image --save</span><br></pre></td></tr></table></figure>
-<h4 id="3-修改-config-yml">3.修改_config.yml</h4>
-<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/" data-id="claqxogbl0002bpcibks39rj0" data-title="5.添加图片" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-软件安装" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022/11/16/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" class="article-date">
-  <time class="dt-published" datetime="2022-11-16T04:00:37.817Z" itemprop="datePublished">2022-11-16</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/hexo/">hexo</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/11/16/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/">1.软件安装</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <hr>
-<h2 id="配置环境">配置环境</h2>
-<p>ubuntu22.04+顺畅访问github的网络环境</p>
-<h2 id="软件配置">软件配置</h2>
-<h4 id="1-安装nodejs和npm（这里使用版本14-21-1-6-14-17）">1.安装nodejs和npm（这里使用版本14.21.1+6.14.17）</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">sudo apt install curl -y</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加node14版本到curl</span></span><br><span class="line">curl -sL https://deb.nodesource.com/setup_14.x | sudo -E bash -</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">下载node+nodejs+npm</span></span><br><span class="line">sudo apt-get install nodejs</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">node -v</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">npm -v</span><br></pre></td></tr></table></figure>
-<h4 id="2-配置-npm-权限为全局安装并切换下载源">2.配置 npm 权限为全局安装并切换下载源</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mkdir ~/.npm-global</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">将 npm 默认下载目录设置为 .npm-global</span></span><br><span class="line">npm config set prefix &#x27;~/.npm-global&#x27;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">将 .npm-global 环境变量添加到 .bashrc</span> </span><br><span class="line">echo &#x27;export PATH=~/.npm-global/bin:$PATH&#x27; &gt;&gt; ~/.bashrc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">更新环境变量</span></span><br><span class="line">source ~/.bashrc</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">切换npm下载源</span></span><br><span class="line">npm config set registry http://registry.npm.taobao.org/</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看npm下载源</span></span><br><span class="line">npm get registry</span><br></pre></td></tr></table></figure>
-<h4 id="3-安装hexo">3.安装hexo</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">npm install -g hexo-cli</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">hexo -v</span><br></pre></td></tr></table></figure>
-<h4 id="4-安装git">4.安装git</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install git</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看版本</span></span><br><span class="line">git --version</span><br></pre></td></tr></table></figure>
-<h4 id="5-配置-git-绑定-github">5.配置 git 绑定 github</h4>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">配置 git 的用户名和邮箱（和 github 用户名邮箱一致）</span></span><br><span class="line">git config --global user.name &quot;thui777&quot;</span><br><span class="line">git config --global user.email &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">生成 SSH 密钥（三次回车）</span></span><br><span class="line">ssh-keygen -t rsa -C &quot;thui777@163.com&quot;</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">查看公钥文件 id_rsa.pub，复制SSH公钥添加到 github 账户中</span></span><br><span class="line">cat ~/.ssh/id_rsa.pub</span><br></pre></td></tr></table></figure>
-<hr>
-<h2 id="出现的问题">出现的问题</h2>
-<p>ubuntu直接使用apt下载nodejs会安装npm不成功，且版本过低，另外安装npm会导致版本不匹配，在使用npm命令时就会报下面的错误：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm ERR! Cannot read property &#x27;insert&#x27; of undefined</span><br><span class="line"></span><br><span class="line">npm ERR! A complete log of this run can be found in:</span><br><span class="line">npm ERR!     /home/thui/.npm/_logs/2022-11-15T13_00_46_517Z-debug-0.log</span><br></pre></td></tr></table></figure>
-<p>因为不建议使用sudo安装hexo，在安装好npm后需要将npm配置为全局安装，否则使用npm命令会报下面的错误：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">npm WARN checkPermissions Missing write access to /usr/lib/node_modules</span><br><span class="line">npm WARN optional SKIPPING OPTIONAL DEPENDENCY: fsevents@~2.3.2 (node_modules/hexo-cli/node_modules/chokidar/node_modules/fsevents):</span><br><span class="line">npm WARN notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for fsevents@2.3.2: wanted &#123;&quot;os&quot;:&quot;darwin&quot;,&quot;arch&quot;:&quot;any&quot;&#125; (current:&#123;&quot;os&quot;:&quot;linux&quot;,&quot;arch&quot;:&quot;x64&quot;&#125;)</span><br><span class="line">npm ERR! code EACCES</span><br><span class="line">npm ERR! syscall access</span><br><span class="line">npm ERR! path /usr/lib/node_modules</span><br><span class="line">npm ERR! errno -13</span><br><span class="line">npm ERR! Error: EACCES: permission denied, access &#x27;/usr/lib/node_modules&#x27;</span><br><span class="line">npm ERR!  [Error: EACCES: permission denied, access &#x27;/usr/lib/node_modules&#x27;] &#123;</span><br><span class="line">npm ERR!   errno: -13,</span><br><span class="line">npm ERR!   code: &#x27;EACCES&#x27;,</span><br><span class="line">npm ERR!   syscall: &#x27;access&#x27;,</span><br><span class="line">npm ERR!   path: &#x27;/usr/lib/node_modules&#x27;</span><br><span class="line">npm ERR! &#125;</span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! The operation was rejected by your operating system.</span><br><span class="line">npm ERR! It is likely you do not have the permissions to access this file as the current user</span><br><span class="line">npm ERR! </span><br><span class="line">npm ERR! If you believe this might be a permissions issue, please double-check the</span><br><span class="line">npm ERR! permissions of the file and its containing directories, or try running</span><br><span class="line">npm ERR! the command again as root/Administrator.</span><br><span class="line">npm ERR! A complete log of this run can be found in:</span><br><span class="line">npm ERR!     /home/thui777/.npm/_logs/2022-11-16T03_24_46_479Z-debug.log</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/16/%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/" data-id="claqxogc1000cbpci42ah4c9h" data-title="1.软件安装" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
 
 
   <nav id="page-nav">
     
-    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
   </nav>
 
 </section>
@@ -703,7 +720,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">January 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li></ul>
     </div>
   </div>
 
@@ -716,7 +733,15 @@
       <ul>
         
           <li>
-            <a href="/2022/12/14/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/">线程池(1)</a>
+            <a href="/2023/01/10/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81/">线程池</a>
+          </li>
+        
+          <li>
+            <a href="/2023/01/08/%E7%BA%BF%E7%A8%8B%E6%B1%A0(2)/">线程池(2)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/14/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">线程池</a>
           </li>
         
           <li>
@@ -725,14 +750,6 @@
         
           <li>
             <a href="/2022/12/13/SSH%E5%AE%89%E8%A3%85/">ssh安装</a>
-          </li>
-        
-          <li>
-            <a href="/2022/12/12/%E4%BF%A1%E5%8F%B7%E9%87%8F/">信号量</a>
-          </li>
-        
-          <li>
-            <a href="/2022/12/11/%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/">条件变量</a>
           </li>
         
       </ul>
@@ -748,7 +765,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2022 By thui<br>
+      &copy; 2023 By thui<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>

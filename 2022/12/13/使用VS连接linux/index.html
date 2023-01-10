@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   
   
-  <title>使用VS连接linux | thui</title>
+  <title>使用VS连接linux | likeStarshine</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="前言 使用VS开发linux项目会顺手一些，这里配置如何使用SSH服务使VS连接上linux，linux系统下需要提前安装好openssh-server，并启动它，如果想开发C项目，因为项目默认是C++，所以也需要提前安装好g++编译器，否则编译调试会报错 1.先安装VS的linux工具   2.创建一个基于linux的项目（我这里写C代码，所以选择C++）  3.连接linux主机">
+  <meta name="description" content="前言 使用VS开发linux项目会顺手一些，这里配置如何使用SSH服务使VS连接上linux，linux系统下需要提前安装好openssh-server，并启动它，如果想开发C项目，因为项目默认是C++，所以也需要提前安装好g++编译器，否则编译调试会报错 1.先安装VS的linux工具   2.创建一个基于linux的项目（我这里写C代码，选择C++）  3.连接linux主机      3.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="使用VS连接linux">
 <meta property="og:url" content="http://example.com/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/index.html">
-<meta property="og:site_name" content="thui">
-<meta property="og:description" content="前言 使用VS开发linux项目会顺手一些，这里配置如何使用SSH服务使VS连接上linux，linux系统下需要提前安装好openssh-server，并启动它，如果想开发C项目，因为项目默认是C++，所以也需要提前安装好g++编译器，否则编译调试会报错 1.先安装VS的linux工具   2.创建一个基于linux的项目（我这里写C代码，所以选择C++）  3.连接linux主机">
+<meta property="og:site_name" content="likeStarshine">
+<meta property="og:description" content="前言 使用VS开发linux项目会顺手一些，这里配置如何使用SSH服务使VS连接上linux，linux系统下需要提前安装好openssh-server，并启动它，如果想开发C项目，因为项目默认是C++，所以也需要提前安装好g++编译器，否则编译调试会报错 1.先安装VS的linux工具   2.创建一个基于linux的项目（我这里写C代码，选择C++）  3.连接linux主机      3.">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/image-20221213150749029.png">
 <meta property="og:image" content="http://example.com/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/image-20221213145933418.png">
@@ -25,12 +25,12 @@
 <meta property="og:image" content="http://example.com/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/image-20221213151513410.png">
 <meta property="og:image" content="http://example.com/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/image-20221213151620799.png">
 <meta property="article:published_time" content="2022-12-13T07:39:12.694Z">
-<meta property="article:modified_time" content="2022-12-13T07:56:51.000Z">
+<meta property="article:modified_time" content="2022-12-14T09:02:55.000Z">
 <meta property="article:author" content="By thui">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/image-20221213150749029.png">
   
-    <link rel="alternate" href="/atom.xml" title="thui" type="application/atom+xml">
+    <link rel="alternate" href="/atom.xml" title="likeStarshine" type="application/atom+xml">
   
   
     <link rel="shortcut icon" href="/favicon.png">
@@ -58,7 +58,7 @@
   <div id="header-outer" class="outer">
     <div id="header-title" class="inner">
       <h1 id="logo-wrap">
-        <a href="/" id="logo">thui</a>
+        <a href="/" id="logo">likeStarshine</a>
       </h1>
       
     </div>
@@ -117,7 +117,7 @@
 <h2 id="1-先安装VS的linux工具">1.先安装VS的linux工具</h2>
 <p><img src="/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/image-20221213150749029.png" alt="1"></p>
 <p><img src="/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/image-20221213145933418.png" alt></p>
-<h2 id="2-创建一个基于linux的项目（我这里写C代码，所以选择C-）">2.创建一个基于linux的项目（我这里写C代码，所以选择C++）</h2>
+<h2 id="2-创建一个基于linux的项目（我这里写C代码，选择C-）">2.创建一个基于linux的项目（我这里写C代码，选择C++）</h2>
 <p><img src="/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/image-20221213151915023.png" alt></p>
 <h2 id="3-连接linux主机">3.连接linux主机</h2>
 <p><img src="/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/image-20221213150720130.png" alt></p>
@@ -144,11 +144,11 @@
     
 <nav id="article-nav">
   
-    <a href="/2022/12/14/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2022/12/14/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          线程池(1)
+          线程池
         
       </div>
     </a>
@@ -188,7 +188,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/01/">January 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li></ul>
     </div>
   </div>
 
@@ -201,7 +201,15 @@
       <ul>
         
           <li>
-            <a href="/2022/12/14/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%8E%9F%E7%90%86/">线程池(1)</a>
+            <a href="/2023/01/10/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81/">线程池</a>
+          </li>
+        
+          <li>
+            <a href="/2023/01/08/%E7%BA%BF%E7%A8%8B%E6%B1%A0(2)/">线程池(2)</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/14/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">线程池</a>
           </li>
         
           <li>
@@ -210,14 +218,6 @@
         
           <li>
             <a href="/2022/12/13/SSH%E5%AE%89%E8%A3%85/">ssh安装</a>
-          </li>
-        
-          <li>
-            <a href="/2022/12/12/%E4%BF%A1%E5%8F%B7%E9%87%8F/">信号量</a>
-          </li>
-        
-          <li>
-            <a href="/2022/12/11/%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/">条件变量</a>
           </li>
         
       </ul>
@@ -233,7 +233,7 @@
   <div class="outer">
     <div id="footer-info" class="inner">
       
-      &copy; 2022 By thui<br>
+      &copy; 2023 By thui<br>
       Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
     </div>
   </div>
