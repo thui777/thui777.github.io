@@ -108,52 +108,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/01/10/%E7%BA%BF%E7%A8%8B%E6%B1%A0(%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81)/" data-id="clcq19akv0000frcieihk9wyx" data-title="线程池测试代码" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-线程池(2)" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2023/01/08/%E7%BA%BF%E7%A8%8B%E6%B1%A0(2)/" class="article-date">
-  <time class="dt-published" datetime="2023-01-08T07:48:02.723Z" itemprop="datePublished">2023-01-08</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B/">线程</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2023/01/08/%E7%BA%BF%E7%A8%8B%E6%B1%A0(2)/">线程池(2)</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <hr>
-<h2 id="创建线程池API">创建线程池API</h2>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line">ThreadPool* <span class="title function_">threadPoolCreate</span><span class="params">(<span class="type">int</span> min, <span class="type">int</span> max, <span class="type">int</span> queueCapacity)</span></span><br><span class="line">&#123;</span><br><span class="line">    ThreadPool* pool = (ThreadPool*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(ThreadPool));</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (pool == <span class="literal">NULL</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;malloc threadpool fail\r\n&quot;</span>);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">        </span><br><span class="line">		<span class="comment">//任务队列属性初始化</span></span><br><span class="line">		pool-&gt;taskQ = (Task*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(Task) * queueCapacity);</span><br><span class="line">		pool-&gt;queueCapacity = queueCapacity;</span><br><span class="line">		pool-&gt;queueSize = <span class="number">0</span>;</span><br><span class="line">		pool-&gt;queueFront = <span class="number">0</span>;</span><br><span class="line">		pool-&gt;queueRear = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">		<span class="comment">//工作区属性初始化</span></span><br><span class="line">		pool-&gt;threadIDs = (<span class="type">pthread_t</span>*)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="type">pthread_t</span>) * max);</span><br><span class="line">		<span class="keyword">if</span> (pool-&gt;threadIDs == <span class="literal">NULL</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;malloc threadIDs fail\r\n&quot;</span>);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">memset</span>(pool-&gt;threadIDs, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="type">pthread_t</span>) * max);</span><br><span class="line">		<span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; min; i++)</span><br><span class="line">		&#123;</span><br><span class="line">			pthread_create(&amp;pool-&gt;threadIDs[i], <span class="literal">NULL</span>, worker, pool);</span><br><span class="line">		&#125;</span><br><span class="line">		pool-&gt;minNum = min;</span><br><span class="line">		pool-&gt;maxNum = max;</span><br><span class="line">		pool-&gt;busyNum = <span class="number">0</span>;</span><br><span class="line">		pool-&gt;liveNum = min;</span><br><span class="line">		pool-&gt;exitNum = <span class="number">0</span>;</span><br><span class="line">        </span><br><span class="line">		<span class="comment">//管理区属性初始化</span></span><br><span class="line">		pthread_create(&amp;pool-&gt;managerID, <span class="literal">NULL</span>, maneger, <span class="literal">NULL</span>);</span><br><span class="line">		<span class="keyword">if</span> (pthread_mutex_init(&amp;pool-&gt;mutexPool, <span class="literal">NULL</span>) != <span class="number">0</span> ||</span><br><span class="line">			pthread_mutex_init(&amp;pool-&gt;mutexBusy, <span class="literal">NULL</span>) != <span class="number">0</span> ||</span><br><span class="line">			pthread_cond_init(&amp;pool-&gt;notFull, <span class="literal">NULL</span>) != <span class="number">0</span> ||</span><br><span class="line">			pthread_cond_init(&amp;pool-&gt;notEmpty, <span class="literal">NULL</span>) != <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="built_in">printf</span>(<span class="string">&quot;mutex or cond init fail\r\n&quot;</span>);</span><br><span class="line">			<span class="keyword">break</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		pool-&gt;shutdown = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">return</span> pool;</span><br><span class="line">	&#125; <span class="keyword">while</span> (<span class="number">0</span>);</span><br><span class="line">	</span><br><span class="line">	<span class="comment">//资源释放</span></span><br><span class="line">	<span class="keyword">if</span> (pool &amp;&amp; pool-&gt;threadIDs)	<span class="built_in">free</span>(pool-&gt;threadIDs); </span><br><span class="line">	<span class="keyword">if</span> (pool &amp;&amp; pool-&gt;taskQ)	<span class="built_in">free</span>(pool-&gt;taskQ);</span><br><span class="line">	<span class="keyword">if</span> (pool)	<span class="built_in">free</span>(pool);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2023/01/08/%E7%BA%BF%E7%A8%8B%E6%B1%A0(2)/" data-id="clcn2p4tz00018xci4z9iehl7" data-title="线程池(2)" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/01/10/%E7%BA%BF%E7%A8%8B%E6%B1%A0(%E6%B5%8B%E8%AF%95%E4%BB%A3%E7%A0%81)/" data-id="clcq1kat3000ph5ci6exfhud8" data-title="线程池测试代码" class="article-share-link">Share</a>
       
       
       
@@ -255,7 +210,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/12/14/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" data-id="clcpwzi430000zlci1h8e3dby" data-title="线程池" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/12/14/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" data-id="clcq1kat4000rh5ci4peafyho" data-title="线程池" class="article-share-link">Share</a>
       
       
       
@@ -316,7 +271,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/" data-id="clblxiofn000046cicfi20p5c" data-title="使用VS连接linux" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/" data-id="clcq1kasc0004h5ci92v347ya" data-title="使用VS连接linux" class="article-share-link">Share</a>
       
       
       
@@ -366,7 +321,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/12/13/SSH%E5%AE%89%E8%A3%85/" data-id="clblwxu7g0000igcic5gl1upy" data-title="ssh安装" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/12/13/SSH%E5%AE%89%E8%A3%85/" data-id="clcq1kas60001h5cibxpagfnx" data-title="ssh安装" class="article-share-link">Share</a>
       
       
       
@@ -495,7 +450,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/12/12/%E4%BF%A1%E5%8F%B7%E9%87%8F/" data-id="clbjlw0jm00009xcidvq342r9" data-title="信号量" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/12/12/%E4%BF%A1%E5%8F%B7%E9%87%8F/" data-id="clcq1kase0005h5ci0a7v8hb6" data-title="信号量" class="article-share-link">Share</a>
       
       
       
@@ -629,7 +584,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/12/11/%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/" data-id="clbi66zdo0000f7ci9iuzdkle" data-title="条件变量" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/12/11/%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/" data-id="clcq1kash0008h5ciedpr4qms" data-title="条件变量" class="article-share-link">Share</a>
       
       
       
@@ -779,7 +734,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/12/08/%E8%AF%BB%E5%86%99%E9%94%81/" data-id="clbercd3p00001pci7ggxh0su" data-title="读写锁" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/12/08/%E8%AF%BB%E5%86%99%E9%94%81/" data-id="clcq1kat8000yh5cib8n9dgws" data-title="读写锁" class="article-share-link">Share</a>
       
       
       
@@ -839,7 +794,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/23/%E6%AD%BB%E9%94%81/" data-id="clatsre5h0000hbcigipa9ria" data-title="死锁" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/23/%E6%AD%BB%E9%94%81/" data-id="clcq1kasi0009h5ci825f2yj2" data-title="死锁" class="article-share-link">Share</a>
       
       
       
@@ -966,7 +921,71 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/23/%E4%BA%92%E6%96%A5%E9%94%81/" data-id="clat63hx900004mciaof8a7vc" data-title="互斥锁" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/23/%E4%BA%92%E6%96%A5%E9%94%81/" data-id="clcq1kas90002h5ci3vungc9e" data-title="互斥锁" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-线程同步" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/" class="article-date">
+  <time class="dt-published" datetime="2022-11-22T15:10:08.376Z" itemprop="datePublished">2022-11-22</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/linux/">linux</a>►<a class="article-category-link" href="/categories/linux/%E7%BA%BF%E7%A8%8B/">线程</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/">线程同步</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <hr>
+<h2 id="线程同步概念">线程同步概念</h2>
+<h4 id="1-临界资源（共享资源）">1.临界资源（共享资源）</h4>
+<p>在程序中，有的资源保存在堆区或者全局区，像这样可以供不同线程访问的资源，我们叫做临界资源或者共享资源；</p>
+<h4 id="2-多个线程访问相同的临界资源会出现什么问题？">2.多个线程访问相同的临界资源会出现什么问题？</h4>
+<p>在程序中有多个线程时，每个线程都可以对临界区的资源进行访问，在分时复用系统中，A线程在访问临界区资源的同时，如果它的时间片已经使用完，那么就会进行上下文切换，此时对这个临界资源的修改会暂时的保存在寄存器中，而不会写入到内存；当B线程也来访问这个临界资源时，B线程会直接从内存资源中进行读取，等到B线程处理完毕把数据写入内存后又切换回A线程时，A线程就会把没及时写入内存的数据写入进去，此时相当于B线程对这个临界资源的修改是无效的，这显然对程序来说不是一个好的结果，为了解决这个问题，我们就需要使用线程同步；</p>
+<h4 id="3-什么是线程同步？">3.什么是线程同步？</h4>
+<p>当A线程在访问一个临界资源时，如果他的时间片使用完了，那么它会把这个临界资源给锁起来，然后B线程来访问这个资源时，就会被阻塞，阻塞掉之后就会切换回A线程就会继续执行，等待A线程执行完毕，然后再切换到B线程时，B线程就可以正常访问临界资源；我们可以得出线程同步的概念，实际上就是让线程访问临界资源时一个一个的访问，一个线程访问完毕之后另一个线程才能开始访问，没访问完毕时就给它锁起来，以防止临界资源出现数据混乱的问题；</p>
+<h2 id="线程同步的方式">线程同步的方式</h2>
+<p>常用的线程同步方式有四种：互斥锁，读写锁，条件变量，信号量；找到临界资源之后，再找到和临界资源相关的上下文代码，这样就可以得到一个代码块，这个代码块可以称为临界区；确定临界区之后，就可以进行线程同步了，具体思路是：</p>
+<ul>
+<li>在临界区的上面添加加锁函数，对临界区加锁</li>
+<li>哪个线程调用这句代码，就会把这把锁锁上，其他的线程就只能阻塞在锁上</li>
+<li>在临界区的下边添加解锁函数，对临界区解锁</li>
+<li>线程在出临界区时就会把那把锁打开，其他抢到锁的线程就可以进入到临界区</li>
+</ul>
+<p>通过锁机制能保证临界区代码最多只能同时有一个线程访问，这个就可以把并行访问变为串行访问了；</p>
+<h2 id="未使用线程同步的示例">未使用线程同步的示例</h2>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;unistd.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="keyword">define</span> MAX 10</span></span><br><span class="line"><span class="type">int</span> number = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">fun_A</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;MAX)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> a = number;</span><br><span class="line">        a++;</span><br><span class="line">        <span class="comment">//加延时是为了模拟时间片使用完成但还没有写入内存的情况</span></span><br><span class="line">        usleep(<span class="number">5</span>);</span><br><span class="line">        number = a;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;thread A，ID = %ld，number = %d\r\n&quot;</span>,pthread_self(), number);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">void</span> *<span class="title function_">fun_B</span><span class="params">(<span class="type">void</span> *arg)</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i&lt;MAX)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="type">int</span> b = number;</span><br><span class="line">        b++;</span><br><span class="line">        usleep(<span class="number">10</span>);</span><br><span class="line">        number = b;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">&quot;thread B，ID = %ld，number = %d\r\n&quot;</span>,pthread_self(), number);</span><br><span class="line">        i++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="type">pthread_t</span> thread_A;</span><br><span class="line">    <span class="type">pthread_t</span> thread_B;</span><br><span class="line">    pthread_create(&amp;thread_A, <span class="literal">NULL</span>, fun_A, <span class="literal">NULL</span>);</span><br><span class="line">    pthread_create(&amp;thread_B, <span class="literal">NULL</span>, fun_B, <span class="literal">NULL</span>);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;线程A创建成功，线程ID：%ld\r\n&quot;</span>,thread_A);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;线程B创建成功，线程ID：%ld\r\n&quot;</span>,thread_B);</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;我是主线程，线程ID：%ld\r\n&quot;</span>,pthread_self());</span><br><span class="line">    <span class="comment">//退出主线程</span></span><br><span class="line">    pthread_exit(<span class="literal">NULL</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="编译并执行测试程序">编译并执行测试程序</h2>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">线程A创建成功，线程ID：140696243705408</span><br><span class="line">线程B创建成功，线程ID：140696235312704</span><br><span class="line">我是主线程，线程ID：140696243709760</span><br><span class="line">thread A，ID = 140696243705408，number = 1</span><br><span class="line">thread B，ID = 140696235312704，number = 2</span><br><span class="line">thread A，ID = 140696243705408，number = 3</span><br><span class="line">thread B，ID = 140696235312704，number = 4</span><br><span class="line">thread B，ID = 140696235312704，number = 6</span><br><span class="line">thread A，ID = 140696243705408，number = 6</span><br><span class="line">thread A，ID = 140696243705408，number = 7</span><br><span class="line">thread B，ID = 140696235312704，number = 7</span><br><span class="line">thread B，ID = 140696235312704，number = 9</span><br><span class="line">thread A，ID = 140696243705408，number = 9</span><br><span class="line">thread A，ID = 140696243705408，number = 10</span><br><span class="line">thread B，ID = 140696235312704，number = 10</span><br><span class="line">thread B，ID = 140696235312704，number = 12</span><br><span class="line">thread A，ID = 140696243705408，number = 12</span><br><span class="line">thread A，ID = 140696243705408，number = 13</span><br><span class="line">thread B，ID = 140696235312704，number = 13</span><br><span class="line">thread B，ID = 140696235312704，number = 15</span><br><span class="line">thread A，ID = 140696243705408，number = 15</span><br><span class="line">thread A，ID = 140696243705408，number = 16</span><br><span class="line">thread B，ID = 140696235312704，number = 16</span><br></pre></td></tr></table></figure>
+<p>每一次的模拟结果都可能不同，这就代表了在不进行线程同步的情况下产生的结果是随机的，这会给程序带来致命的打击；</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/22/%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/" data-id="clcq1kat0000mh5ci8v3edv4b" data-title="线程同步" class="article-share-link">Share</a>
       
       
       
@@ -1025,10 +1044,6 @@
           </li>
         
           <li>
-            <a href="/2023/01/08/%E7%BA%BF%E7%A8%8B%E6%B1%A0(2)/">线程池(2)</a>
-          </li>
-        
-          <li>
             <a href="/2022/12/14/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">线程池</a>
           </li>
         
@@ -1038,6 +1053,10 @@
         
           <li>
             <a href="/2022/12/13/SSH%E5%AE%89%E8%A3%85/">ssh安装</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/12/%E4%BF%A1%E5%8F%B7%E9%87%8F/">信号量</a>
           </li>
         
       </ul>
