@@ -3,10 +3,7 @@
   <entry>
     <title>ssh安装</title>
     <url>/2022/12/13/SSH%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<hr>
-<h2 id="前言">前言</h2>
-<p>记录一下安装ssh工具以及启动是否成功</p>
-<h2 id="ssh安装">ssh安装</h2>
+    <content><![CDATA[<h2 id="ssh安装">ssh安装</h2>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo apt-get install openssh-server</span><br></pre></td></tr></table></figure>
 <h2 id="ssh服务启动">ssh服务启动</h2>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sudo /etc/init.d/ssh start</span><br></pre></td></tr></table></figure>
@@ -23,7 +20,7 @@
     <url>/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/</url>
     <content><![CDATA[<hr>
 <h2 id="前言">前言</h2>
-<p>使用VS开发linux项目会顺手一些，这里配置如何使用SSH服务使VS连接上linux，linux系统下需要提前安装好openssh-server，并启动它，如果想开发C项目，因为项目默认是C++，所以也需要提前安装好g++编译器，否则编译调试会报错</p>
+<p>使用VS开发linux项目会顺手一些，这里配置一下如何使用SSH服务使VS连接上linux，linux系统下需要提前安装好openssh-server，并启动它，如果想开发C项目，因为项目默认是C++，所以也需要提前安装好g++编译器，否则编译调试会报错</p>
 <h2 id="1-先安装VS的linux工具">1.先安装VS的linux工具</h2>
 <p><img src="/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/image-20221213150749029.png" alt="1"></p>
 <p><img src="/2022/12/13/%E4%BD%BF%E7%94%A8VS%E8%BF%9E%E6%8E%A5linux/image-20221213145933418.png" alt></p>
@@ -49,10 +46,7 @@
   <entry>
     <title>环境变量配置</title>
     <url>/2022/11/16/%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E8%AE%BE%E7%BD%AE/</url>
-    <content><![CDATA[<hr>
-<h2 id="前言">前言</h2>
-<p>记录一下linux环境变量的修改方法以及各个修改方法之间的区别</p>
-<h2 id="系统版本">系统版本</h2>
+    <content><![CDATA[<h2 id="系统版本">系统版本</h2>
 <p>ubuntu22.04</p>
 <h2 id="操作命令">操作命令</h2>
 <h3 id="1-对当前终端有效">1.对当前终端有效</h3>
@@ -68,8 +62,7 @@
   <entry>
     <title>1.线程创建</title>
     <url>/2022/11/21/1.%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/</url>
-    <content><![CDATA[<hr>
-<h2 id="返回线程ID函数">返回线程ID函数</h2>
+    <content><![CDATA[<h2 id="返回线程ID函数">返回线程ID函数</h2>
 <p>每一个线程都有一个唯一的线程ID，ID类型为pthread_t，为无符号长整型，想要得到线程ID则可使用函数；</p>
 <p>返回线程ID函数原型：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">pthread_t</span> <span class="title function_">pthraed_self</span><span class="params">(<span class="type">void</span>)</span>;</span><br></pre></td></tr></table></figure>
@@ -113,8 +106,7 @@
   <entry>
     <title>2.线程退出</title>
     <url>/2022/11/21/2.%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/</url>
-    <content><![CDATA[<hr>
-<h2 id="线程退出函数">线程退出函数</h2>
+    <content><![CDATA[<h2 id="线程退出函数">线程退出函数</h2>
 <p>在创建进程时，进程一般写为死循环，那么在创建子线程之后，子线程和主线程会进行抢占，当我们不需要某个线程时我们可以调用线程退出函数来退出线程，子线程和主线程都可以调用这个函数；</p>
 <p>线程退出函数原型：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">pthread_exit</span><span class="params">(<span class="type">void</span> *retval)</span>;</span><br></pre></td></tr></table></figure>
@@ -139,8 +131,7 @@
   <entry>
     <title>3.线程回收</title>
     <url>/2022/11/22/3.%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/</url>
-    <content><![CDATA[<hr>
-<h2 id="线程回收函数">线程回收函数</h2>
+    <content><![CDATA[<h2 id="线程回收函数">线程回收函数</h2>
 <p>线程和进程一样，子线程退出的时候其内核资源主要由主线程回收（也可由其他线程回收），线程库中提供的线程回收函数叫做pthread_join()，这是一个阻塞函数，如果还有子线程在运行，主线程调用该函数就会阻塞，并且等待子线程运行退出，退出后主线程解除阻塞状态并进行资源回收，函数被调用一次只能回收一个子线程，有多个子线程需要多次调用；另外通过线程回收函数还可以获取到子线程退出时传递出来的数据；</p>
 <p>线程回收函数原型：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">pthread_join</span><span class="params">(<span class="type">pthread_t</span> thread, <span class="type">void</span> **retval)</span>;</span><br></pre></td></tr></table></figure>
@@ -175,8 +166,7 @@
   <entry>
     <title>4.线程分离</title>
     <url>/2022/11/22/4.%E7%BA%BF%E7%A8%8B%E5%88%86%E7%A6%BB/</url>
-    <content><![CDATA[<hr>
-<h2 id="线程分离函数">线程分离函数</h2>
+    <content><![CDATA[<h2 id="线程分离函数">线程分离函数</h2>
 <p>在线程回收时，我们提到过，调用线程回收函数会阻塞线程，但是有时候我们的主线程有自己的业务需要处理，并不想让他阻塞起来，同时我们又想关闭回收某个子线程，这个时候我们就可以调用线程分离函数，让操作系统或者其他进程来接管和回收其占用的内核资源，但是线程分离出去之后并不会直接回收线程，有可能还会运行，但是当主线程已经执行完毕后，进程空间被释放，那么分离出去的子线程也会被释放掉；</p>
 <p>线程分离函数原型：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;pthread.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="type">int</span> <span class="title function_">pthread_detach</span><span class="params">(<span class="type">pthread_t</span> thread)</span>;</span><br></pre></td></tr></table></figure>
@@ -206,8 +196,7 @@
   <entry>
     <title>5.线程取消</title>
     <url>/2022/11/22/5.%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/</url>
-    <content><![CDATA[<hr>
-<h2 id="线程取消函数">线程取消函数</h2>
+    <content><![CDATA[<h2 id="线程取消函数">线程取消函数</h2>
 <p>线程取消的含义是在满足某些条件下在一个线程中杀死另一个线程，使用线程取消函数杀死一个线程需要分为两步：</p>
 <ol>
 <li>在线程A中调用线程取消函数pthread_cancel，指定杀死线程B，此时线程B还没有死</li>
@@ -240,8 +229,7 @@
   <entry>
     <title>6.线程同步</title>
     <url>/2022/11/22/6.%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/</url>
-    <content><![CDATA[<hr>
-<h2 id="线程同步概念">线程同步概念</h2>
+    <content><![CDATA[<h2 id="线程同步概念">线程同步概念</h2>
 <h4 id="1-临界资源（共享资源）">1.临界资源（共享资源）</h4>
 <p>在程序中，有的资源保存在堆区或者全局区，像这样可以供不同线程访问的资源，我们叫做临界资源或者共享资源；</p>
 <h4 id="2-多个线程访问相同的临界资源会出现什么问题？">2.多个线程访问相同的临界资源会出现什么问题？</h4>
@@ -271,8 +259,7 @@
   <entry>
     <title>7.互斥锁</title>
     <url>/2022/11/23/7.%E4%BA%92%E6%96%A5%E9%94%81/</url>
-    <content><![CDATA[<hr>
-<h2 id="互斥锁的原理">互斥锁的原理</h2>
+    <content><![CDATA[<h2 id="互斥锁的原理">互斥锁的原理</h2>
 <p>互斥锁是线程同步最常用的一种方式，通过互斥锁锁定一个代码块，被锁定的这个代码块，所有的线程只能顺序执行（不能并行处理），但是需要付出的代价就是执行效率的降低，因为默认临界区多个线程是可以并行处理的，但现在只能串行处理；</p>
 <p>在linux中创建一把互斥锁：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">pthread_mutex_t</span> mutex;</span><br></pre></td></tr></table></figure>
@@ -365,8 +352,7 @@
   <entry>
     <title>8.死锁</title>
     <url>/2022/11/23/8.%E6%AD%BB%E9%94%81/</url>
-    <content><![CDATA[<hr>
-<h2 id="什么叫死锁？">什么叫死锁？</h2>
+    <content><![CDATA[<h2 id="什么叫死锁？">什么叫死锁？</h2>
 <p>就是在线程给一把锁加锁后，一直没有解锁，那么来访问这个共享资源的线程都被阻塞了，这种一直打不开的锁就叫死锁，显然这样会对我们的系统造成不可预知的后果；</p>
 <h2 id="造成死锁的场景">造成死锁的场景</h2>
 <h4 id="1-加锁后没有解锁">1.加锁后没有解锁</h4>
@@ -392,8 +378,7 @@
   <entry>
     <title>9.读写锁</title>
     <url>/2022/12/08/9.%E8%AF%BB%E5%86%99%E9%94%81/</url>
-    <content><![CDATA[<hr>
-<h2 id="读写锁原理">读写锁原理</h2>
+    <content><![CDATA[<h2 id="读写锁原理">读写锁原理</h2>
 <p>在互斥锁锁定的临界区中，所有的线程只能顺序访问，无论是读操作还是写操作，极大影响执行效率，当我们只想对临界资源进行读操作时，那么线程串行读取显然不是最优的，而当对临界资源进行写操作时，这时候串行的写就尤为重要，所以在读写锁中，我们可以控制加锁方式来提高读操作的执行效率，这种锁就叫做读写锁</p>
 <p>在linux中创建一把读写锁：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">pthread_rwlock_t</span> rwlock;</span><br></pre></td></tr></table></figure>
@@ -509,8 +494,7 @@
   <entry>
     <title>10.条件变量</title>
     <url>/2022/12/11/10.%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/</url>
-    <content><![CDATA[<hr>
-<h2 id="条件变量的作用">条件变量的作用</h2>
+    <content><![CDATA[<h2 id="条件变量的作用">条件变量的作用</h2>
 <p>条件变量的主要作用使用来进行线程的阻塞；虽然锁也可以阻塞线程，但是它比较死板，不灵活，此时我们可以使用条件变量来阻塞线程，二者产生的效果是不同的；条件变量是，在满足特定条件后（一般根据场景自己定义）才会阻塞线程，如何条件不满足，多个线程还是会同时访问临界资源，单独使用时还是会造成共享数据的混乱，所以一般使用条件变量配合锁一起使用，即灵活又保证了共享数据的正确性；</p>
 <p>在linux中定义一个条件变量：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="type">pthread_cond_t</span> cond;</span><br></pre></td></tr></table></figure>
@@ -610,8 +594,7 @@
   <entry>
     <title>11.信号量</title>
     <url>/2022/12/12/11.%E4%BF%A1%E5%8F%B7%E9%87%8F/</url>
-    <content><![CDATA[<hr>
-<h2 id="信号量的作用">信号量的作用</h2>
+    <content><![CDATA[<h2 id="信号量的作用">信号量的作用</h2>
 <p>信号量主要用于多线程多任务同步，一个线程完成了某个动作就通过信号量告诉别的线程，别的线程再进行某些动作；信号量不一定是锁定某一个资源，是流程上的概念，比如A,B两个线程，B线程需要等待A线程完成某些任务后再进行自己的任务，这个任务并不一定是锁定某一资源，还可以是进行一些计算或者数据处理之类的；信号量也是用来阻塞线程的，但是不能完全保证线程安全，如果需要保证线程安全需要配合和互斥锁一起使用，信号量和条件变量一样用于处理生产者和消费者模型，用于阻塞生产者线程或者消费者线程的运行</p>
 <p>linux中定义一个信号量：</p>
 <figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;semaphore.h&gt;</span></span></span><br><span class="line"><span class="type">sem_t</span> sem;</span><br></pre></td></tr></table></figure>
@@ -706,8 +689,7 @@
   <entry>
     <title>12.线程池</title>
     <url>/2022/12/14/12.%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
-    <content><![CDATA[<hr>
-<h2 id="线程直接使用的缺点">线程直接使用的缺点</h2>
+    <content><![CDATA[<h2 id="线程直接使用的缺点">线程直接使用的缺点</h2>
 <p>我们使用线程的时候就去创建一个线程，实现非常简便，但是会出现一个问题，如果并发的线程数量很多，并且每个线程都是执行一个时间很短的任务就结束了，这样频繁的创建线程就会大大降低系统的效率，因为频繁的创建线程和销毁线程都需要时间，系统开销太大；</p>
 <h2 id="什么是线程池？">什么是线程池？</h2>
 <p>线程池是一种多线程处理形式，处理过程中将任务添加到队列中，然后在线程池中创建线程自动的去执行这些任务；线程池的线程都是后台线程，每个线程使用默认堆栈大小，以默认优先级运行，并处于多线程单元中；如果某个线程始终保持空闲，则线程池将插入另一个辅助线程来使所有处理器保持繁忙；如果线程池中所有线程都保持繁忙，且队列中还有挂起的任务，则线程池将在一段时间后创建另一个辅助线程来执行这些任务，但是辅助线程的数量永远不会超过线程池设置的最大线程数，超过了最大线程数就必须使任务在队列中排队，等其他的线程完成后再执行这些任务，这样的一个逻辑系统就叫做线程池；</p>
@@ -765,10 +747,7 @@
   <entry>
     <title>1.软件安装</title>
     <url>/2023/01/11/1.%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/</url>
-    <content><![CDATA[<hr>
-<h2 id="前言">前言</h2>
-<p>这里简单记录一下我hexo搭建的配置环境以及软件安装的版本和步骤，还有其中出现的一些问题</p>
-<h2 id="配置环境">配置环境</h2>
+    <content><![CDATA[<h2 id="配置环境">配置环境</h2>
 <p>ubuntu22.04+顺畅访问github的网络环境</p>
 <h2 id="软件配置">软件配置</h2>
 <h3 id="1-安装nodejs和npm（这里使用版本14-21-1-6-14-17）">1.安装nodejs和npm（这里使用版本14.21.1+6.14.17）</h3>
@@ -795,10 +774,7 @@
   <entry>
     <title>2.网站部署</title>
     <url>/2023/01/11/2.%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/</url>
-    <content><![CDATA[<hr>
-<h2 id="前言">前言</h2>
-<p>这里记录一下hexo如何绑定github page页面，以及一些操作步骤</p>
-<h2 id="操作步骤">操作步骤</h2>
+    <content><![CDATA[<h2 id="操作步骤">操作步骤</h2>
 <h4 id="1-初始化blog文件夹">1.初始化blog文件夹</h4>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加依赖</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
 <h4 id="2-修改配置文件添加部署仓库">2.修改配置文件添加部署仓库</h4>
@@ -820,8 +796,7 @@
   <entry>
     <title>3.源文件保存</title>
     <url>/2023/01/11/3.%E6%BA%90%E6%96%87%E4%BB%B6%E4%BF%9D%E5%AD%98/</url>
-    <content><![CDATA[<hr>
-<h2 id="前言">前言</h2>
+    <content><![CDATA[<h2 id="前言">前言</h2>
 <p>除了网页静态文件以外，我们应该把源文件也提交到github上进行备份，以防止本地源文件被误删后需要重新配置，顺带熟悉一下git的使用；</p>
 <h2 id="推送源码">推送源码</h2>
 <h3 id="1-进入blog文件夹进行git初始化">1.进入blog文件夹进行git初始化</h3>
@@ -843,8 +818,7 @@
   <entry>
     <title>4.新建布局</title>
     <url>/2023/01/11/4.%E6%96%B0%E5%BB%BA%E5%B8%83%E5%B1%80/</url>
-    <content><![CDATA[<hr>
-<h2 id="layout简介">layout简介</h2>
+    <content><![CDATA[<h2 id="layout简介">layout简介</h2>
 <p>layout为布局，每次新建都需要选择一种layout ，hexo默认存在三种post draft page，当输入layout为空时则默认选择post，除了hexo 自带的三种外，我们可以自定义layout；</p>
 <h2 id="命令格式">命令格式</h2>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo new [layout] title</span><br></pre></td></tr></table></figure>
@@ -862,8 +836,7 @@
   <entry>
     <title>5.添加图片</title>
     <url>/2023/01/11/5.%E6%B7%BB%E5%8A%A0%E5%9B%BE%E7%89%87/</url>
-    <content><![CDATA[<hr>
-<h2 id="前言">前言</h2>
+    <content><![CDATA[<h2 id="前言">前言</h2>
 <p>在写博客时除了代码和文本以外，怎么插入图像是非常要重要的，这里记录一下插入方法，方便以后查阅</p>
 <h2 id="步骤">步骤</h2>
 <h4 id="1-先打开Typero的偏好设置，选择图像">1.先打开Typero的偏好设置，选择图像</h4>
