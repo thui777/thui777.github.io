@@ -808,6 +808,8 @@
     <title>1.软件安装</title>
     <url>/2023/01/11/1.%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85/</url>
     <content><![CDATA[<hr>
+<h2 id="前言">前言</h2>
+<p>这里简单记录一下我hexo搭建的配置环境以及软件安装的版本和步骤，还有其中出现的一些问题</p>
 <h2 id="配置环境">配置环境</h2>
 <p>ubuntu22.04+顺畅访问github的网络环境</p>
 <h2 id="软件配置">软件配置</h2>
@@ -928,6 +930,24 @@
       </categories>
       <tags>
         <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>6.Next主题打开阅读全文标识</title>
+    <url>/2023/01/11/6.Next%E4%B8%BB%E9%A2%98%E6%89%93%E5%BC%80%E9%98%85%E8%AF%BB%E5%85%A8%E6%96%87%E6%A0%87%E8%AF%86/</url>
+    <content><![CDATA[<hr>
+<h2 id="下载插件">下载插件</h2>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">npm install hexo-excerpt --save</span><br></pre></td></tr></table></figure>
+<h2 id="在站点配置文件中添加">在站点配置文件中添加</h2>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">excerpt:						# 一定要顶格写，注意格式</span><br><span class="line">  depth: 10						# 他的大小就是全文阅读预览长度设置</span><br><span class="line">  excerpt_excludes: []</span><br><span class="line">  more_excludes: []</span><br><span class="line">  hideWholePostExcerpts: true</span><br></pre></td></tr></table></figure>
+<h2 id="在主题配置文件中修改">在主题配置文件中修改</h2>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Automatically excerpt description <span class="keyword">in</span> homepage as preamble text.</span></span><br><span class="line">excerpt_description: true		# 一般默认为true</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>-hexo -next</tag>
       </tags>
   </entry>
 </search>
