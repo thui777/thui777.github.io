@@ -105,9 +105,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>2.线程退出</title>
@@ -134,9 +131,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>3.线程回收</title>
@@ -173,9 +167,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>4.线程分离</title>
@@ -207,9 +198,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>5.线程取消</title>
@@ -244,9 +232,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>6.线程同步</title>
@@ -278,9 +263,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>7.互斥锁</title>
@@ -375,9 +357,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>8.死锁</title>
@@ -405,9 +384,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>9.读写锁</title>
@@ -525,9 +501,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>10.条件变量</title>
@@ -629,9 +602,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>11.信号量</title>
@@ -728,9 +698,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>12.线程池</title>
@@ -800,9 +767,6 @@
         <category>linux</category>
         <category>线程</category>
       </categories>
-      <tags>
-        <tag>线程</tag>
-      </tags>
   </entry>
   <entry>
     <title>1.软件安装</title>
@@ -833,24 +797,23 @@
       <categories>
         <category>hexo</category>
       </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
   </entry>
   <entry>
     <title>2.网站部署</title>
     <url>/2023/01/11/2.%E7%BD%91%E7%AB%99%E9%83%A8%E7%BD%B2/</url>
     <content><![CDATA[<hr>
+<h2 id="前言">前言</h2>
+<p>这里记录一下hexo如何绑定github page页面，以及一些操作步骤</p>
 <h2 id="操作步骤">操作步骤</h2>
-<h4 id="1-初始化blog文件夹">1.初始化blog文件夹</h4>
+<h4 id="初始化blog文件夹">初始化blog文件夹</h4>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo init blog</span><br><span class="line">cd blog</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">添加依赖</span></span><br><span class="line">npm install</span><br></pre></td></tr></table></figure>
-<h4 id="2-修改配置文件添加部署仓库">2.修改配置文件添加部署仓库</h4>
+<h4 id="修改配置文件添加部署仓库">修改配置文件添加部署仓库</h4>
 <figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="attr">deploy:</span></span><br><span class="line">  <span class="attr">type:</span> <span class="string">git</span></span><br><span class="line">  <span class="attr">repo:</span> <span class="string">git@github.com:thui777/thui777.github.io.git</span>	<span class="comment">#SSH</span></span><br><span class="line">  <span class="attr">branch:</span> <span class="string">main</span></span><br></pre></td></tr></table></figure>
-<h4 id="3-生成静态网页文件到pubilc文件夹">3.生成静态网页文件到pubilc文件夹</h4>
+<h4 id="生成静态网页文件到pubilc文件夹">生成静态网页文件到pubilc文件夹</h4>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo generate</span><br></pre></td></tr></table></figure>
-<h4 id="4-部署到设定的仓库">4.部署到设定的仓库</h4>
+<h4 id="部署到设定的仓库">部署到设定的仓库</h4>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">hexo deploy</span><br></pre></td></tr></table></figure>
-<h4 id="5-进入github-page查看是否部署成功">5.进入github page查看是否部署成功</h4>
+<h4 id="进入github-page查看是否部署成功">进入github page查看是否部署成功</h4>
 <h2 id="问题">问题</h2>
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">thui777@thui777-VirtualBox:~/work/blog$ hexo d</span><br><span class="line">INFO  Validating config</span><br><span class="line">ERROR Deployer not found: git</span><br></pre></td></tr></table></figure>
 <p>原因：缺少git组件，安装即可</p>
@@ -859,9 +822,6 @@
       <categories>
         <category>hexo</category>
       </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
   </entry>
   <entry>
     <title>3.源文件保存</title>
@@ -885,9 +845,6 @@
       <categories>
         <category>hexo</category>
       </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
   </entry>
   <entry>
     <title>4.新建布局</title>
@@ -907,9 +864,6 @@
       <categories>
         <category>hexo</category>
       </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
   </entry>
   <entry>
     <title>5.添加图片</title>
@@ -928,9 +882,6 @@
       <categories>
         <category>hexo</category>
       </categories>
-      <tags>
-        <tag>hexo</tag>
-      </tags>
   </entry>
   <entry>
     <title>6.Next主题打开阅读全文标识</title>
@@ -946,8 +897,5 @@
       <categories>
         <category>hexo</category>
       </categories>
-      <tags>
-        <tag>-hexo -next</tag>
-      </tags>
   </entry>
 </search>
