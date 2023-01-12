@@ -25,13 +25,13 @@
 
     <meta name="description" content="线程分离函数 在线程回收时，我们提到过，调用线程回收函数会阻塞线程，但是有时候我们的主线程有自己的业务需要处理，并不想让他阻塞起来，同时我们又想关闭回收某个子线程，这个时候我们就可以调用线程分离函数，让操作系统或者其他进程来接管和回收其占用的内核资源，但是线程分离出去之后并不会直接回收线程，有可能还会运行，但是当主线程已经执行完毕后，进程空间被释放，那么分离出去的子线程也会被释放掉； 线程分离函数">
 <meta property="og:type" content="article">
-<meta property="og:title" content="4.线程分离">
+<meta property="og:title" content="线程分离">
 <meta property="og:url" content="http://example.com/2022/11/22/4.%E7%BA%BF%E7%A8%8B%E5%88%86%E7%A6%BB/index.html">
 <meta property="og:site_name" content="likeStarshine">
 <meta property="og:description" content="线程分离函数 在线程回收时，我们提到过，调用线程回收函数会阻塞线程，但是有时候我们的主线程有自己的业务需要处理，并不想让他阻塞起来，同时我们又想关闭回收某个子线程，这个时候我们就可以调用线程分离函数，让操作系统或者其他进程来接管和回收其占用的内核资源，但是线程分离出去之后并不会直接回收线程，有可能还会运行，但是当主线程已经执行完毕后，进程空间被释放，那么分离出去的子线程也会被释放掉； 线程分离函数">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-11-22T10:05:27.641Z">
-<meta property="article:modified_time" content="2023-01-11T11:31:11.000Z">
+<meta property="article:modified_time" content="2023-01-12T06:59:05.000Z">
 <meta property="article:author" content="thui">
 <meta name="twitter:card" content="summary">
 
@@ -40,10 +40,10 @@
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2022/11/22/4.%E7%BA%BF%E7%A8%8B%E5%88%86%E7%A6%BB/","path":"2022/11/22/4.线程分离/","title":"4.线程分离"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"http://example.com/2022/11/22/4.%E7%BA%BF%E7%A8%8B%E5%88%86%E7%A6%BB/","path":"2022/11/22/4.线程分离/","title":"线程分离"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>4.线程分离 | likeStarshine</title>
+<title>线程分离 | likeStarshine</title>
   
 
 
@@ -90,7 +90,7 @@
 <nav class="site-nav">
   <ul class="main-menu menu">
         <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
-        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">6</span></a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类<span class="badge">7</span></a></li>
       <li class="menu-item menu-item-search">
         <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
         </a>
@@ -162,7 +162,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
   </nav>
@@ -219,12 +219,12 @@
     </span>
     
     <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
-      <meta itemprop="name" content="4.线程分离 | likeStarshine">
+      <meta itemprop="name" content="线程分离 | likeStarshine">
       <meta itemprop="description" content="">
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          4.线程分离
+          线程分离
         </h1>
 
         <div class="post-meta-container">
@@ -242,7 +242,7 @@
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2023-01-11 19:31:11" itemprop="dateModified" datetime="2023-01-11T19:31:11+08:00">2023-01-11</time>
+      <time title="修改时间：2023-01-12 14:59:05" itemprop="dateModified" datetime="2023-01-12T14:59:05+08:00">2023-01-12</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -302,13 +302,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2022/11/22/3.%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/" rel="prev" title="3.线程回收">
-                  <i class="fa fa-chevron-left"></i> 3.线程回收
+                <a href="/2022/11/22/3.%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/" rel="prev" title="线程回收">
+                  <i class="fa fa-chevron-left"></i> 线程回收
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2022/11/22/5.%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/" rel="next" title="5.线程取消">
-                  5.线程取消 <i class="fa fa-chevron-right"></i>
+                <a href="/2022/11/22/5.%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/" rel="next" title="线程取消">
+                  线程取消 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>

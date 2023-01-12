@@ -60,7 +60,7 @@
       </categories>
   </entry>
   <entry>
-    <title>1.线程创建</title>
+    <title>线程创建</title>
     <url>/2022/11/21/1.%E7%BA%BF%E7%A8%8B%E5%88%9B%E5%BB%BA/</url>
     <content><![CDATA[<h2 id="返回线程ID函数">返回线程ID函数</h2>
 <p>每一个线程都有一个唯一的线程ID，ID类型为pthread_t，为无符号长整型，想要得到线程ID则可使用函数；</p>
@@ -104,7 +104,7 @@
       </categories>
   </entry>
   <entry>
-    <title>2.线程退出</title>
+    <title>线程退出</title>
     <url>/2022/11/21/2.%E7%BA%BF%E7%A8%8B%E9%80%80%E5%87%BA/</url>
     <content><![CDATA[<h2 id="线程退出函数">线程退出函数</h2>
 <p>在创建进程时，进程一般写为死循环，那么在创建子线程之后，子线程和主线程会进行抢占，当我们不需要某个线程时我们可以调用线程退出函数来退出线程，子线程和主线程都可以调用这个函数；</p>
@@ -129,7 +129,7 @@
       </categories>
   </entry>
   <entry>
-    <title>3.线程回收</title>
+    <title>线程回收</title>
     <url>/2022/11/22/3.%E7%BA%BF%E7%A8%8B%E5%9B%9E%E6%94%B6/</url>
     <content><![CDATA[<h2 id="线程回收函数">线程回收函数</h2>
 <p>线程和进程一样，子线程退出的时候其内核资源主要由主线程回收（也可由其他线程回收），线程库中提供的线程回收函数叫做pthread_join()，这是一个阻塞函数，如果还有子线程在运行，主线程调用该函数就会阻塞，并且等待子线程运行退出，退出后主线程解除阻塞状态并进行资源回收，函数被调用一次只能回收一个子线程，有多个子线程需要多次调用；另外通过线程回收函数还可以获取到子线程退出时传递出来的数据；</p>
@@ -164,7 +164,7 @@
       </categories>
   </entry>
   <entry>
-    <title>4.线程分离</title>
+    <title>线程分离</title>
     <url>/2022/11/22/4.%E7%BA%BF%E7%A8%8B%E5%88%86%E7%A6%BB/</url>
     <content><![CDATA[<h2 id="线程分离函数">线程分离函数</h2>
 <p>在线程回收时，我们提到过，调用线程回收函数会阻塞线程，但是有时候我们的主线程有自己的业务需要处理，并不想让他阻塞起来，同时我们又想关闭回收某个子线程，这个时候我们就可以调用线程分离函数，让操作系统或者其他进程来接管和回收其占用的内核资源，但是线程分离出去之后并不会直接回收线程，有可能还会运行，但是当主线程已经执行完毕后，进程空间被释放，那么分离出去的子线程也会被释放掉；</p>
@@ -194,7 +194,7 @@
       </categories>
   </entry>
   <entry>
-    <title>5.线程取消</title>
+    <title>线程取消</title>
     <url>/2022/11/22/5.%E7%BA%BF%E7%A8%8B%E5%8F%96%E6%B6%88/</url>
     <content><![CDATA[<h2 id="线程取消函数">线程取消函数</h2>
 <p>线程取消的含义是在满足某些条件下在一个线程中杀死另一个线程，使用线程取消函数杀死一个线程需要分为两步：</p>
@@ -227,7 +227,7 @@
       </categories>
   </entry>
   <entry>
-    <title>6.线程同步</title>
+    <title>线程同步</title>
     <url>/2022/11/22/6.%E7%BA%BF%E7%A8%8B%E5%90%8C%E6%AD%A5/</url>
     <content><![CDATA[<h2 id="线程同步概念">线程同步概念</h2>
 <h4 id="1-临界资源（共享资源）">1.临界资源（共享资源）</h4>
@@ -257,7 +257,7 @@
       </categories>
   </entry>
   <entry>
-    <title>7.互斥锁</title>
+    <title>互斥锁</title>
     <url>/2022/11/23/7.%E4%BA%92%E6%96%A5%E9%94%81/</url>
     <content><![CDATA[<h2 id="互斥锁的原理">互斥锁的原理</h2>
 <p>互斥锁是线程同步最常用的一种方式，通过互斥锁锁定一个代码块，被锁定的这个代码块，所有的线程只能顺序执行（不能并行处理），但是需要付出的代价就是执行效率的降低，因为默认临界区多个线程是可以并行处理的，但现在只能串行处理；</p>
@@ -350,7 +350,7 @@
       </categories>
   </entry>
   <entry>
-    <title>8.死锁</title>
+    <title>死锁</title>
     <url>/2022/11/23/8.%E6%AD%BB%E9%94%81/</url>
     <content><![CDATA[<h2 id="什么叫死锁？">什么叫死锁？</h2>
 <p>就是在线程给一把锁加锁后，一直没有解锁，那么来访问这个共享资源的线程都被阻塞了，这种一直打不开的锁就叫死锁，显然这样会对我们的系统造成不可预知的后果；</p>
@@ -376,7 +376,7 @@
       </categories>
   </entry>
   <entry>
-    <title>9.读写锁</title>
+    <title>读写锁</title>
     <url>/2022/12/08/9.%E8%AF%BB%E5%86%99%E9%94%81/</url>
     <content><![CDATA[<h2 id="读写锁原理">读写锁原理</h2>
 <p>在互斥锁锁定的临界区中，所有的线程只能顺序访问，无论是读操作还是写操作，极大影响执行效率，当我们只想对临界资源进行读操作时，那么线程串行读取显然不是最优的，而当对临界资源进行写操作时，这时候串行的写就尤为重要，所以在读写锁中，我们可以控制加锁方式来提高读操作的执行效率，这种锁就叫做读写锁</p>
@@ -492,7 +492,7 @@
       </categories>
   </entry>
   <entry>
-    <title>10.条件变量</title>
+    <title>条件变量</title>
     <url>/2022/12/11/10.%E6%9D%A1%E4%BB%B6%E5%8F%98%E9%87%8F/</url>
     <content><![CDATA[<h2 id="条件变量的作用">条件变量的作用</h2>
 <p>条件变量的主要作用使用来进行线程的阻塞；虽然锁也可以阻塞线程，但是它比较死板，不灵活，此时我们可以使用条件变量来阻塞线程，二者产生的效果是不同的；条件变量是，在满足特定条件后（一般根据场景自己定义）才会阻塞线程，如何条件不满足，多个线程还是会同时访问临界资源，单独使用时还是会造成共享数据的混乱，所以一般使用条件变量配合锁一起使用，即灵活又保证了共享数据的正确性；</p>
@@ -592,7 +592,7 @@
       </categories>
   </entry>
   <entry>
-    <title>11.信号量</title>
+    <title>信号量</title>
     <url>/2022/12/12/11.%E4%BF%A1%E5%8F%B7%E9%87%8F/</url>
     <content><![CDATA[<h2 id="信号量的作用">信号量的作用</h2>
 <p>信号量主要用于多线程多任务同步，一个线程完成了某个动作就通过信号量告诉别的线程，别的线程再进行某些动作；信号量不一定是锁定某一个资源，是流程上的概念，比如A,B两个线程，B线程需要等待A线程完成某些任务后再进行自己的任务，这个任务并不一定是锁定某一资源，还可以是进行一些计算或者数据处理之类的；信号量也是用来阻塞线程的，但是不能完全保证线程安全，如果需要保证线程安全需要配合和互斥锁一起使用，信号量和条件变量一样用于处理生产者和消费者模型，用于阻塞生产者线程或者消费者线程的运行</p>
@@ -687,7 +687,7 @@
       </categories>
   </entry>
   <entry>
-    <title>12.线程池</title>
+    <title>线程池</title>
     <url>/2022/12/14/12.%E7%BA%BF%E7%A8%8B%E6%B1%A0/</url>
     <content><![CDATA[<h2 id="线程直接使用的缺点">线程直接使用的缺点</h2>
 <p>我们使用线程的时候就去创建一个线程，实现非常简便，但是会出现一个问题，如果并发的线程数量很多，并且每个线程都是执行一个时间很短的任务就结束了，这样频繁的创建线程就会大大降低系统的效率，因为频繁的创建线程和销毁线程都需要时间，系统开销太大；</p>
@@ -848,6 +848,68 @@
 ]]></content>
       <categories>
         <category>hexo</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>进程概述</title>
+    <url>/2023/01/12/1.%E8%BF%9B%E7%A8%8B%E6%A6%82%E8%BF%B0/</url>
+    <content><![CDATA[<h2 id="进程概述">进程概述</h2>
+<p>从严格意义上来说，程序不同于进程，它们的状态和占用的系统资源都是不同的；</p>
+<ul>
+<li>程序是指磁盘上的可执行文件，并且只占用磁盘上的空间，是一个静态的概念</li>
+<li>进程是指正在执行的程序，不占用磁盘空间，但需要消耗系统的内存和CPU资源，每个运行的进程都对应一个独立的虚拟地址空间，是一个动态的概念</li>
+</ul>
+<h2 id="并行和并发">并行和并发</h2>
+<h3 id="CPU时间片">CPU时间片</h3>
+<p>CPU在投个时间只能处理一个任务，但是操作系统是支持多任务的，那么在计算机CPU只有一个的情况下是如何完成多任务处理的呢？CPU会给每个进程分配一小段时间，这段时间对于进程来说就叫做时间片，进程拥有时间片时才允许运行，因为时间片通常来说非常短暂，所以从表面上看各个进程都是同时运行的，这就是分时复用的思想；如果时间片结束进程还在运行，CPU会中断这个进程并且挂起等待下一个时间片。如果进程在时间片结束前阻塞或者结束，那么CPU的使用权会被释放，让给其他需要运行的进程，这样可以避免CPU资源的浪费；因此计算机中多个程序从宏观上看是同时运行的，从微观上看由于CPU一次只能处理一个进程，所以他们是轮流执行的，只不过切换的速度非常快；且CPU的核数越多，计算机的处理效率越高</p>
+<h3 id="并发和并行">并发和并行</h3>
+<p>并发和并行都可以理解为多个进程同时运行，但是它们又有所不同</p>
+<ul>
+<li>并发的同时运行是指由于CPU的时间片切换速度非常快，进程看上去是在同时运行，但实际上还是轮流执行；并发这个概念是针对某一个硬件资源而言的，在某个时间段内处理任务的总量越大，我们就可以说并发效率越高</li>
+<li>并行的同时运行是指多个硬件资源同时运行多个任务，是真真切切的同时运行；并行需要依赖多个硬件资源，单个硬件资源没有并行的概念</li>
+</ul>
+<h2 id="PCB">PCB</h2>
+<p>PCB是指进程控制块，linux内核的进程控制块本质上一个叫做task_struct的结构体，在这个结构体中记录了进程运行相关的一些信息：</p>
+<ul>
+<li>进程ID：每一个进程都对应着一个唯一的进程ID，类型为pid_t，是一个整型数</li>
+<li>进程的状态：进程有不同的状态，状态时一直在变化的，有就绪态、运行态、挂起和停止等状态</li>
+<li>进程对应的虚拟地址空间的信息</li>
+<li>描述控制终端的信息，进程在哪个终端启动就默认和哪个终端进行绑定</li>
+<li>当前工作目录：默认情况下，启动进程的目录就是当前的工作目录</li>
+<li>umask掩码：在创建新文件的时候，通过这个掩码屏蔽某些用于对文件的操作权限</li>
+<li>文件描述符：每个被分配的文件描述符都对应一个已经打开的磁盘文件</li>
+<li>和信号相关的信息：在linux中调用函数，键盘快捷键，执行shell命令等操作都会产生信号</li>
+<li>阻塞信号集：记录当前进程中阻塞哪些已产生的信号，使其不能被处理</li>
+<li>未决信号集：记录在当前进程中产生的哪些信号还没有被处理掉</li>
+<li>用户ID和用户组ID：当前进程属于哪个用户和哪个用户组</li>
+<li>会话和进程组：多个进程的集合叫做进程组，多个进程组的集合叫做会话</li>
+<li>进程可以使用的资源上限：可以使用shell命令ulimit -a查看</li>
+</ul>
+<h2 id="进程状态">进程状态</h2>
+<p>进程一共有五种状态分别为：创建态，就绪态，运行态，阻塞态（挂起态），退出态（终止态）；其中创建态和退出态维持的时间是非常短的，我们将就绪态，运行态，挂起态三者之间的切换理解清楚</p>
+<ul>
+<li>就绪态：进程被创建出来，有运行的资格但是还没有运行，需要去抢占CPU的时间片，得到时间片之后进程开始运行，从就绪态转换为运行态，当时间片用完以后，进程失去CPU的使用权，又从运行态转换为就绪态</li>
+<li>运行态：运行态不会一直持续，进程的时间片运行完失去CPU后，就会从运行态转换为就绪态，只要进程没有退出就会一直在就绪态和运行态之间不停的切换</li>
+<li>阻塞态：进程被强制放弃CPU并且没有抢夺CPU时间片的资格，比如在程序中调用了sleep函数等，进程就从运行态转换为阻塞态；当某些条件被满足了，比如sleep结束了，进程的阻塞就会被解除，进程也从阻塞态转换为就绪态</li>
+<li>退出态：进程被销毁，占用的系统资源都被释放，任何状态的进程都可以直接转换为退出态</li>
+</ul>
+<h2 id="进程命令">进程命令</h2>
+<h3 id="1-查看进程">1.查看进程</h3>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">ps aux</span><br></pre></td></tr></table></figure>
+<ul>
+<li>a：查看所有终端的信息（进程不关联终端的话，TTY那一栏显示 ？ ）</li>
+<li>u：查看用户相关的信息</li>
+<li>x：显示和终端无关的进程信息</li>
+</ul>
+<h3 id="2-杀死进程">2.杀死进程</h3>
+<p>kill命令可以发送投个信号到对应的进程，进程收到某些信号之后默认的处理动作就是退出进程，如果要给进程发送信号，可以先查看一下Linux给我们提供了哪些标准信号</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill -l</span><br><span class="line"> 1) SIGHUP       2) SIGINT       3) SIGQUIT      4) SIGILL       5) SIGTRAP</span><br><span class="line"> 6) SIGABRT      7) SIGBUS       8) SIGFPE       9) SIGKILL     10) SIGUSR1</span><br><span class="line">11) SIGSEGV     12) SIGUSR2     13) SIGPIPE     14) SIGALRM     15) SIGTERM</span><br><span class="line">16) SIGSTKFLT   17) SIGCHLD     18) SIGCONT     19) SIGSTOP     20) SIGTSTP</span><br><span class="line">21) SIGTTIN     22) SIGTTOU     23) SIGURG      24) SIGXCPU     25) SIGXFSZ</span><br><span class="line">26) SIGVTALRM   27) SIGPROF     28) SIGWINCH    29) SIGIO       30) SIGPWR</span><br><span class="line">31) SIGSYS      34) SIGRTMIN    35) SIGRTMIN+1  36) SIGRTMIN+2  37) SIGRTMIN+3</span><br><span class="line">38) SIGRTMIN+4  39) SIGRTMIN+5  40) SIGRTMIN+6  41) SIGRTMIN+7  42) SIGRTMIN+8</span><br><span class="line">43) SIGRTMIN+9  44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12 47) SIGRTMIN+13</span><br><span class="line">48) SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-12</span><br><span class="line">53) SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9  56) SIGRTMAX-8  57) SIGRTMAX-7</span><br><span class="line">58) SIGRTMAX-6  59) SIGRTMAX-5  60) SIGRTMAX-4  61) SIGRTMAX-3  62) SIGRTMAX-2</span><br><span class="line">63) SIGRTMAX-1  64) SIGRTMAX</span><br></pre></td></tr></table></figure>
+<p>9号信号SIGKILL的行为是无条件杀死进程，想要杀死那个进程就可以把这个信号发送给这个进程，具体操作如下：</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">kill -9 [进程ID]</span><br><span class="line">kill -SIGKILL [进程ID]</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>linux</category>
+        <category>进程</category>
       </categories>
   </entry>
 </search>
