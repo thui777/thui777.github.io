@@ -7,8 +7,8 @@ title: likeStarshine
 subtitle: ''
 description: ''
 keywords:
-author: By thui
-language: en
+author: thui
+language: zh-CN
 timezone: ''
 
 # URL
@@ -24,7 +24,8 @@ pretty_urls:
 source_dir: source
 public_dir: public
 tag_dir: tags
-archive_dir: archives
+#archive_dir: archives
+archive_dir: /
 category_dir: categories
 code_dir: downloads/code
 i18n_dir: :lang
@@ -45,7 +46,7 @@ relative_link: false
 future: true
 highlight:
   enable: true
-  line_number: true
+  line_number: false
   auto_detect: false
   tab_replace: ''
   wrap: true
@@ -61,7 +62,7 @@ prismjs:
 # per_page: Posts displayed per page. (0 = disable pagination)
 # order_by: Posts order. (Order by date descending by default)
 index_generator:
-  path: ''
+  path: /aaa/
   per_page: 10
   order_by: -date
 
@@ -97,7 +98,7 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/one-command-deployment
@@ -105,3 +106,13 @@ deploy:
   type: git
   repo: git@github.com:thui777/thui777.github.io.git
   branch: main
+  
+  
+########################################################################################
+# 搜索
+search:
+path: search.xml
+field: post
+format: html
+limit: 10000
+

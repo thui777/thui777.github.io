@@ -1,13 +1,14 @@
 ---
 title: 使用VS连接linux
 categories: [工具的使用,VS的使用]
+data: 2023-01-11 04:49:12
 ---
 
 ---
 
 ## 前言
 
-使用VS开发linux项目会顺手一些，这里配置如何使用SSH服务使VS连接上linux，linux系统下需要提前安装好openssh-server，并启动它，如果想开发C项目，因为项目默认是C++，所以也需要提前安装好g++编译器，否则编译调试会报错
+使用VS开发linux项目会顺手一些，这里配置一下如何使用SSH服务使VS连接上linux，linux系统下需要提前安装好openssh-server，并启动它，如果想开发C项目，因为项目默认是C++，所以也需要提前安装好g++编译器，否则编译调试会报错
 
 ## 1.先安装VS的linux工具
 

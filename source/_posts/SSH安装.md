@@ -1,9 +1,8 @@
 ---
 title: ssh安装
 categories: ubuntu
+data: 2023-01-11 04:49:12
 ---
-
---------
 
 ## ssh安装
 
